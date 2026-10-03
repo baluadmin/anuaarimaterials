@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store App - Customer Storefront</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex justify-center items-center h-screen m-0">
+
+    <!-- Mobile Frame Container -->
+    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-white flex flex-col relative overflow-hidden">
+
+        <!-- TOP HEADER -->
+        <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md z-10">
+            <h1 id="header-title" class="text-lg font-bold">Store Home</h1>
+            <span class="text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full font-semibold">Live Store</span>
+        </header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
+            <!-- Dynamically loaded views go here -->
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 shadow-lg z-10">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-indigo-600 transition">
+                <i class="fa-solid fa-house text-xl"></i>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition">
+                <i class="fa-solid fa-grid-2 text-xl"></i>
+                <span class="text-xs mt-1">Categories</span>
+            </button>
+            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition relative">
+                <i class="fa-solid fa-cart-shopping text-xl"></i>
+                <span class="text-xs mt-1">Cart</span>
+                <span id="cart-badge" class="absolute -top-1 right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- JAVASCRIPT CUSTOMER LOGIC -->
+    <script>
+        let currentTab = 'home';
+        let cart = [];
+        let selectedCategoryFilter = 'All';
+
+        // Fetch products synchronized with owner app
+        function getProducts() {
+            const saved = localStorage.getItem('owner_products');
+            if (saved) return JSON.parse(saved);
+            return [
+                { id: 1, name: 'Wireless Earbuds', price: 49.99, category: 'Electronics', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }
+            ];
+        }
+
+        // Fetch custom categories synchronized with owner app
+        function getCategories() {
+            const saved = localStorage.getItem('owner_categories');
+            if (saved) return JSON.parse(saved);
+            return ['Electronics', 'Fashion', 'Home', 'Groceries'];
+        }
+
+        // AUTO-SYNC LISTENER: Instantly redraws screen when owner adds/deletes items in another tab/window
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'owner_products' || event.key === 'owner_categories') {
+                renderContent();
+            }
+        });
+
+        function switchTab(tab) {
+            currentTab = tab;
+            ['home', 'categories', 'cart'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === tab) {
+                    btn.className = "flex flex-col items-center text-indigo-600 transition";
+                } else {
+                    btn.className = "flex flex-col items-center text-gray-400 hover:text-indigo-600 transition";
+                }
+            });
+            renderContent();
+        }
+
+        function filterByCategory(cat) {
+            selectedCategoryFilter = cat;
+            switchTab('home');
+        }
+
+        function renderContent() {
+            const container = document.getElementById('main-content');
+            const headerTitle = document.getElementById('header-title');
+            const products = getProducts();
+            const categories = getCategories();
+
+            if (currentTab === 'home') {
+                headerTitle.innerText = selectedCategoryFilter === 'All' ? "Store Home" : selectedCategoryFilter;
+                
+                const filteredProducts = selectedCategoryFilter === 'All' 
+                    ? products 
+                    : products.filter(p => p.category === selectedCategoryFilter);
+
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-5 text-white shadow-md">
+                            <h2 class="text-xl font-bold">Special Offers!</h2>
+                            <p class="text-xs opacity-90 mt-1">Shop our latest catalog updated live.</p>
+                        </div>
+
+                        <!-- Category Filter Pills -->
+                        <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar">
+                            <button onclick="filterByCategory('All')" class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${selectedCategoryFilter === 'All' ? 'bg-indigo-600 text-white shadow' : 'bg-gray-200 text-gray-700'}">
+                                All Items
+                            </button>
+                            ${categories.map(cat => `
+                                <button onclick="filterByCategory('${cat}')" class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${selectedCategoryFilter === cat ? 'bg-indigo-600 text-white shadow' : 'bg-gray-200 text-gray-700'}">
+                                    ${cat}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-bold text-gray-800 text-sm">Products (${filteredProducts.length})</h3>
+                            ${selectedCategoryFilter !== 'All' ? `<button onclick="filterByCategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline">Clear Filter</button>` : ''}
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            ${filteredProducts.length === 0 ? `
+                                <div class="col-span-2 text-center py-10 text-gray-400">
+                                    <i class="fa-solid fa-box-open text-3xl mb-2"></i>
+                                    <p class="text-xs">No products found in this category.</p>
+                                </div>
+                            ` : filteredProducts.map(p => `
+                                <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
+                                    <img src="${p.image}" class="w-full h-32 object-cover rounded-lg mb-2 bg-gray-50">
+                                    <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
+                                    <span class="text-[10px] text-gray-400">${p.category}</span>                                     <div class="flex justify-between items-center mt-2">                                         <span class="text-indigo-600 font-bold text-sm">$${p.price.toFixed(2)}</span>
+                                        <button onclick="addToCart(${p.id})" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
+                                            <i class="fa-solid fa-plus text-xs"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'categories') {
+                headerTitle.innerText = "Store Categories";
+                container.innerHTML = `
+                    <div class="grid grid-cols-2 gap-3">
+                        ${categories.map(cat => `
+                            <div onclick="filterByCategory('${cat}')" class="bg-white border border-gray-200 rounded-xl p-5 text-center shadow-sm hover:border-indigo-500 transition cursor-pointer flex flex-col items-center justify-center h-28">
+                                <i class="fa-solid fa-folder-open text-3xl text-indigo-600 mb-2"></i>
+                                <span class="font-semibold text-gray-800 text-sm">${cat}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (currentTab === 'cart') {
+                headerTitle.innerText = "My Cart";
+                if (cart.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 space-y-3 pt-20">
+                            <i class="fa-solid fa-cart-arrow-down text-5xl"></i>
+                            <p class="text-sm">Your cart is empty</p>
+                        </div>
+                    `;
+                } else {
+                    const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+                    container.innerHTML = `
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-10">
+                            <div class="space-y-2 overflow-y-auto flex-1">
+                                ${cart.map((item, index) => `
+                                    <div class="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>                                                 <span class="text-indigo-600 font-semibold text-xs">$${item.price.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 p-2">
+                                            <i class="fa-solid fa-trash text-xs"></i>
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="bg-white border-t border-gray-200 pt-3">
+                                <div class="flex justify-between font-bold text-gray-800 mb-3">
+                                    <span>Total Amount:</span>
+                                    <span class="text-indigo-600">$${total}</span>
+                                </div>
+                                <button onclick="alert('Checkout successful! Order placed.')" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow hover:bg-indigo-700 transition">
+                                    Proceed to Checkout
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function addToCart(productId) {
+            const products = getProducts();
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCartBadge();
+                alert(`${product.name} added to cart!`);
+            }
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartBadge();
+            renderContent();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            if (cart.length > 0) {
+                badge.innerText = cart.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Initial Load
+        renderContent();
+    </script>
+</body>
+</html>
