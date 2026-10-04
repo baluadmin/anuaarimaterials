@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PWA Manifest Link -->
+    <link rel="manifest" href="./manifest.json">
 </head>
 <body class="bg-gray-100 flex justify-center items-center h-screen m-0">
 
@@ -138,7 +140,7 @@
                                 <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
                                     <img src="${p.image}" class="w-full h-32 object-cover rounded-lg mb-2 bg-gray-50">
                                     <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                    <span class="text-[10px] text-gray-400">${p.category}</span>                                     <div class="flex justify-between items-center mt-2">                                         <span class="text-indigo-600 font-bold text-sm">$${p.price.toFixed(2)}</span>
+                                    <span class="text-[10px] text-gray-400">${p.category}</span>     <div class="flex justify-between items-center mt-2">     <span class="text-indigo-600 font-bold text-sm">$${p.price.toFixed(2)}</span>
                                         <button onclick="addToCart(${p.id})" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
                                             <i class="fa-solid fa-plus text-xs"></i>
                                         </button>
@@ -179,7 +181,7 @@
                                         <div class="flex items-center space-x-3">
                                             <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
                                             <div>
-                                                <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>                                                 <span class="text-indigo-600 font-semibold text-xs">$${item.price.toFixed(2)}</span>
+                                                <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>     <span class="text-indigo-600 font-semibold text-xs">$${item.price.toFixed(2)}</span>
                                             </div>
                                         </div>
                                         <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 p-2">
