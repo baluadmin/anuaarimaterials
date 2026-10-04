@@ -61,6 +61,16 @@
             ];
         }
 
+        // Shuffle array utility
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
         // Fetch custom categories synchronized with owner app
         function getCategories() {
             const saved = localStorage.getItem('owner_categories');
@@ -102,19 +112,17 @@
             if (currentTab === 'home') {
                 headerTitle.innerText = selectedCategoryFilter === 'All' ? "Store Home" : selectedCategoryFilter;
                 
-                const filteredProducts = selectedCategoryFilter === 'All' 
+                let filteredProducts = selectedCategoryFilter === 'All' 
                     ? products 
                     : products.filter(p => p.category === selectedCategoryFilter);
 
+                // Shuffle products on home load / filter view
+                filteredProducts = shuffleArray(filteredProducts);
+
                 container.innerHTML = `
                     <div class="space-y-4">
-                        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-5 text-white shadow-md">
-                            <h2 class="text-xl font-bold">Special Offers!</h2>
-                            <p class="text-xs opacity-90 mt-1">Shop our latest catalog updated live.</p>
-                        </div>
-
                         <!-- Category Filter Pills -->
-                        <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar">
+                        <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar pt-1">
                             <button onclick="filterByCategory('All')" class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${selectedCategoryFilter === 'All' ? 'bg-indigo-600 text-white shadow' : 'bg-gray-200 text-gray-700'}">
                                 All Items
                             </button>
