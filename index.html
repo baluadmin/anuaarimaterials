@@ -121,28 +121,11 @@
 
                 container.innerHTML = `
                     <div class="space-y-4">
-                        <!-- Category Filter Pills -->
-                        <div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar pt-1">
-                            <button onclick="filterByCategory('All')" class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${selectedCategoryFilter === 'All' ? 'bg-indigo-600 text-white shadow' : 'bg-gray-200 text-gray-700'}">
-                                All Items
-                            </button>
-                            ${categories.map(cat => `
-                                <button onclick="filterByCategory('${cat}')" class="px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${selectedCategoryFilter === cat ? 'bg-indigo-600 text-white shadow' : 'bg-gray-200 text-gray-700'}">
-                                    ${cat}
-                                </button>
-                            `).join('')}
-                        </div>
-
-                        <div class="flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800 text-sm">Products (${filteredProducts.length})</h3>
-                            ${selectedCategoryFilter !== 'All' ? `<button onclick="filterByCategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline">Clear Filter</button>` : ''}
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3 pt-1">
                             ${filteredProducts.length === 0 ? `
                                 <div class="col-span-2 text-center py-10 text-gray-400">
                                     <i class="fa-solid fa-box-open text-3xl mb-2"></i>
-                                    <p class="text-xs">No products found in this category.</p>
+                                    <p class="text-xs">No products found.</p>
                                 </div>
                             ` : filteredProducts.map(p => `
                                 <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
