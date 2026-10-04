@@ -65,11 +65,10 @@
         let cachedProducts = [];
         let cachedCategories = [];
 
-        // Fetch products & categories live from Google Sheets
         function fetchSheetData() {
             if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
-                cachedCategories = ['Beads Collections'];
+                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Bunch Beads', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
+                cachedCategories = ['Bunch Beads', 'Glass Seed Beads', 'Sugar Beads', 'Crystal Beads'];
                 renderContent();
                 return;
             }
@@ -85,13 +84,12 @@
                 })
                 .catch(err => {
                     console.error("Failed to load from sheet:", err);
-                    cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
-                    cachedCategories = ['Beads Collections'];
+                    cachedProducts = [];
+                    cachedCategories = [];
                     renderContent();
                 });
         }
 
-        // Shuffle array utility
         function shuffleArray(array) {
             let arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -133,7 +131,7 @@
                     <div class="space-y-4">
                         ${selectedCategoryFilter !== 'All' ? `
                             <div class="flex justify-between items-center bg-indigo-50 p-2 rounded-lg">
-                                <span class="text-xs font-bold text-indigo-700 truncate">Category: ${selectedCategoryFilter}</span>
+                                <span class="text-xs font-bold text-indigo-700 truncate">Subcategory: ${selectedCategoryFilter}</span>
                                 <button onclick="filterByCategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline whitespace-nowrap ml-2">Show All</button>
                             </div>
                         ` : ''}
@@ -142,13 +140,13 @@
                             ${filteredProducts.length === 0 ? `
                                 <div class="col-span-2 text-center py-10 text-gray-400">
                                     <i class="fa-solid fa-box-open text-3xl mb-2"></i>
-                                    <p class="text-xs">No items found in inventory.</p>
+                                    <p class="text-xs">No items found.</p>
                                 </div>
                             ` : filteredProducts.map(p => `
                                 <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
                                     <img src="${p.image}" class="w-full h-28 object-cover rounded-lg mb-2 bg-gray-50">
                                     <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                    <span class="text-[10px] text-gray-400 truncate">${p.category}</span>
+                                    <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
                                     <div class="flex justify-between items-center mt-2">
                                         <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>
                                         <button onclick="addToCart('${p.id}')" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
@@ -167,7 +165,7 @@
                             <div onclick="filterByCategory('${cat}')" class="bg-white border border-gray-200 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
-                                        <i class="fa-solid fa-layer-group"></i>
+                                        <i class="fa-solid fa-tag"></i>
                                     </div>
                                     <span class="font-semibold text-gray-800 text-xs">${cat}</span>
                                 </div>
