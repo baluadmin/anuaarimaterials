@@ -17,8 +17,14 @@
     <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-white flex flex-col relative overflow-hidden">
 
         <!-- TOP HEADER -->
-        <header class="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md z-10">
-            <h1 id="header-title" class="text-base font-bold tracking-wide">ANU AARI MATERIALS</h1>
+        <header class="bg-indigo-600 text-white p-3 flex justify-between items-center shadow-md z-10">
+            <div>
+                <h1 id="header-title" class="text-sm font-bold tracking-wide">ANU AARI MATERIALS</h1>
+                <a href="tel:9840450113" class="text-[11px] text-indigo-100 flex items-center space-x-1 mt-0.5 hover:underline">
+                    <i class="fa-solid fa-phone text-[10px]"></i>
+                    <span>9840450113</span>
+                </a>
+            </div>
             <span class="text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full font-semibold">Live Store</span>
         </header>
 
@@ -105,12 +111,8 @@
 
         function renderContent() {
             const container = document.getElementById('main-content');
-            const headerTitle = document.getElementById('header-title');
             const products = getProducts();
             const categories = getCategories();
-
-            // Always keep header branded as ANU AARI MATERIALS
-            headerTitle.innerText = "ANU AARI MATERIALS";
 
             if (currentTab === 'home') {
                 let filteredProducts = selectedCategoryFilter === 'All' 
