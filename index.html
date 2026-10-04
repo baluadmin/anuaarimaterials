@@ -56,8 +56,8 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        // 🚨 REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL 🚨
-        const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+        // Connected to your live Google Apps Script Web App
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
 
         let currentTab = 'home';
         let cart = [];
@@ -67,27 +67,21 @@
         let cachedCategories = [];
 
         function fetchSheetData() {
-            if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections / Beads / मोती / மணிகள்', subcategory: 'Bunch Beads', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
-                cachedCategories = [{ categoryName: 'Beads Collections / Beads / मोती / மணிகள்', subcategories: ['Bunch Beads', 'Glass Seed Beads', 'Sugar Beads', 'Crystal Beads'] }];
-                renderContent();
-                return;
-            }
-
             fetch(GOOGLE_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === "success") {
-                        cachedProducts = data.products;
-                        cachedCategories = data.categories;
+                        cachedProducts = data.products || [];
+                        cachedCategories = data.categories || [];
                         renderContent();
+                    } else {
+                        console.error("Sheet error:", data.message);
+                        document.getElementById('main-content').innerHTML = `<div class="text-center py-20 text-red-500 text-xs">Error loading sheet data: ${data.message}</div>`;
                     }
                 })
                 .catch(err => {
                     console.error("Failed to load from sheet:", err);
-                    cachedProducts = [];
-                    cachedCategories = [];
-                    renderContent();
+                    document.getElementById('main-content').innerHTML = `<div class="text-center py-20 text-red-500 text-xs">Failed to connect to Google Sheet. Check console for details.</div>`;
                 });
         }
 
@@ -324,11 +318,6 @@
                 Customer_Name: name,
                 Primary_Phone: phone
             };
-
-            if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-                alert("Please configure your Google Apps Script URL in index.html first!");
-                return;
-            }
 
             alert("Submitting your order...");
 
