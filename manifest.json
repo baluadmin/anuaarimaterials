@@ -7,5 +7,14 @@
   "scope": "/",
   "short_name": "materials",
   "start_url": "/",
-  "theme_color": "#ffffff"
+  "theme_color": "#ffffff",
+  "description": "all aari materials",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
