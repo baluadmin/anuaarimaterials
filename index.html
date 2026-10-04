@@ -29,7 +29,10 @@
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
-            <!-- Dynamically loaded views go here -->
+            <div class="flex flex-col items-center justify-center h-full text-gray-400">
+                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2"></i>
+                <p class="text-xs">Loading items from Google Sheet...</p>
+            </div>
         </main>
 
         <!-- BOTTOM NAVIGATION BAR -->
@@ -51,7 +54,7 @@
 
     </div>
 
-    <!-- JAVASCRIPT CUSTOMER & GOOGLE SHEETS LOGIC -->
+    <!-- JAVASCRIPT APP LOGIC -->
     <script>
         // 🚨 REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT WEB APP URL 🚨
         const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
@@ -59,14 +62,33 @@
         let currentTab = 'home';
         let cart = [];
         let selectedCategoryFilter = 'All';
+        let cachedProducts = [];
+        let cachedCategories = [];
 
-        // Fetch products synchronized with owner app
-        function getProducts() {
-            const saved = localStorage.getItem('owner_products');
-            if (saved) return JSON.parse(saved);
-            return [
-                { id: 1, name: 'Aari Zari Thread', price: 29.99, category: 'Threads', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }
-            ];
+        // Fetch products & categories live from Google Sheets
+        function fetchSheetData() {
+            if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
+                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
+                cachedCategories = ['Beads Collections'];
+                renderContent();
+                return;
+            }
+
+            fetch(GOOGLE_SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        cachedProducts = data.products;
+                        cachedCategories = data.categories;
+                        renderContent();
+                    }
+                })
+                .catch(err => {
+                    console.error("Failed to load from sheet:", err);
+                    cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
+                    cachedCategories = ['Beads Collections'];
+                    renderContent();
+                });
         }
 
         // Shuffle array utility
@@ -78,20 +100,6 @@
             }
             return arr;
         }
-
-        // Fetch custom categories synchronized with owner app
-        function getCategories() {
-            const saved = localStorage.getItem('owner_categories');
-            if (saved) return JSON.parse(saved);
-            return ['Threads', 'Beads & Stones', 'Needles', 'Frames'];
-        }
-
-        // AUTO-SYNC LISTENER: Instantly redraws screen when owner adds/deletes items in another tab/window
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'owner_products' || event.key === 'owner_categories') {
-                renderContent();
-            }
-        });
 
         function switchTab(tab) {
             currentTab = tab;
@@ -113,23 +121,20 @@
 
         function renderContent() {
             const container = document.getElementById('main-content');
-            const products = getProducts();
-            const categories = getCategories();
 
             if (currentTab === 'home') {
                 let filteredProducts = selectedCategoryFilter === 'All' 
-                    ? products 
-                    : products.filter(p => p.category === selectedCategoryFilter);
+                    ? cachedProducts 
+                    : cachedProducts.filter(p => p.category === selectedCategoryFilter);
 
-                // Shuffle products on home load / filter view
                 filteredProducts = shuffleArray(filteredProducts);
 
                 container.innerHTML = `
                     <div class="space-y-4">
                         ${selectedCategoryFilter !== 'All' ? `
                             <div class="flex justify-between items-center bg-indigo-50 p-2 rounded-lg">
-                                <span class="text-xs font-bold text-indigo-700">Category: ${selectedCategoryFilter}</span>
-                                <button onclick="filterByCategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline">Show All</button>
+                                <span class="text-xs font-bold text-indigo-700 truncate">Category: ${selectedCategoryFilter}</span>
+                                <button onclick="filterByCategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline whitespace-nowrap ml-2">Show All</button>
                             </div>
                         ` : ''}
                         
@@ -137,16 +142,16 @@
                             ${filteredProducts.length === 0 ? `
                                 <div class="col-span-2 text-center py-10 text-gray-400">
                                     <i class="fa-solid fa-box-open text-3xl mb-2"></i>
-                                    <p class="text-xs">No products found.</p>
+                                    <p class="text-xs">No items found in inventory.</p>
                                 </div>
                             ` : filteredProducts.map(p => `
                                 <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                                    <img src="${p.image}" class="w-full h-32 object-cover rounded-lg mb-2 bg-gray-50">
+                                    <img src="${p.image}" class="w-full h-28 object-cover rounded-lg mb-2 bg-gray-50">
                                     <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                    <span class="text-[10px] text-gray-400">${p.category}</span>
+                                    <span class="text-[10px] text-gray-400 truncate">${p.category}</span>
                                     <div class="flex justify-between items-center mt-2">
                                         <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>
-                                        <button onclick="addToCart(${p.id})" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
+                                        <button onclick="addToCart('${p.id}')" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
                                             <i class="fa-solid fa-plus text-xs"></i>
                                         </button>
                                     </div>
@@ -157,11 +162,16 @@
                 `;
             } else if (currentTab === 'categories') {
                 container.innerHTML = `
-                    <div class="grid grid-cols-2 gap-3">
-                        ${categories.map(cat => `
-                            <div onclick="filterByCategory('${cat}')" class="bg-white border border-gray-200 rounded-xl p-5 text-center shadow-sm hover:border-indigo-500 transition cursor-pointer flex flex-col items-center justify-center h-28">
-                                <i class="fa-solid fa-layer-group text-3xl text-indigo-600 mb-2"></i>
-                                <span class="font-semibold text-gray-800 text-sm">${cat}</span>
+                    <div class="grid grid-cols-1 gap-3">
+                        ${cachedCategories.map(cat => `
+                            <div onclick="filterByCategory('${cat}')" class="bg-white border border-gray-200 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                    </div>
+                                    <span class="font-semibold text-gray-800 text-xs">${cat}</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
                             </div>
                         `).join('')}
                     </div>
@@ -254,7 +264,6 @@
                 return;
             }
 
-            // Format items list for the sheet
             const itemsList = cart.map(item => `${item.name} (₹${item.price})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
@@ -269,30 +278,25 @@
                 Description: desc
             };
 
-            // Also log to LOGIN sheet as per your backend structure
             const loginPayload = {
                 Type: "Login",
                 Customer_Name: name,
                 Primary_Phone: phone
             };
 
-            // Send to Google Sheet Web App
             if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
                 alert("Please configure your Google Apps Script URL in index.html first!");
                 return;
             }
 
-            // Show loading alert
             alert("Submitting your order...");
 
-            // Send Order
             fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderPayload)
             }).then(() => {
-                // Send Login record
                 return fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
@@ -306,7 +310,7 @@
                 switchTab('home');
             }).catch(err => {
                 console.error("Error submitting order:", err);
-                alert("Order submitted! (Check your Google Sheet to confirm).");
+                alert("Order submitted!");
                 cart = [];
                 updateCartBadge();
                 switchTab('home');
@@ -314,8 +318,7 @@
         }
 
         function addToCart(productId) {
-            const products = getProducts();
-            const product = products.find(p => p.id === productId);
+            const product = cachedProducts.find(p => p.id === productId);
             if (product) {
                 cart.push(product);
                 updateCartBadge();
@@ -339,8 +342,8 @@
             }
         }
 
-        // Initial Load
-        renderContent();
+        // Fetch Data on App Load
+        fetchSheetData();
     </script>
 </body>
 </html>
