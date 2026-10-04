@@ -62,13 +62,14 @@
         let currentTab = 'home';
         let cart = [];
         let selectedSubcategoryFilter = 'All';
+        let selectedCategory = null;
         let cachedProducts = [];
-        let cachedSubcategories = [];
+        let cachedCategories = [];
 
         function fetchSheetData() {
             if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE") {
-                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, subcategory: 'Bunch Beads', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
-                cachedSubcategories = ['Bunch Beads', 'Glass Seed Beads', 'Sugar Beads', 'Crystal Beads', 'Tablet Beads', 'Hanging Beads', 'Crackle and Jelly Beads'];
+                cachedProducts = [{ id: 'AB0001', name: 'Bunch Beads', price: 10, category: 'Beads Collections / Beads / मोती / மணிகள்', subcategory: 'Bunch Beads', image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300' }];
+                cachedCategories = [{ categoryName: 'Beads Collections / Beads / मोती / மணிகள்', subcategories: ['Bunch Beads', 'Glass Seed Beads', 'Sugar Beads', 'Crystal Beads'] }];
                 renderContent();
                 return;
             }
@@ -78,14 +79,14 @@
                 .then(data => {
                     if (data.status === "success") {
                         cachedProducts = data.products;
-                        cachedSubcategories = data.subcategories;
+                        cachedCategories = data.categories;
                         renderContent();
                     }
                 })
                 .catch(err => {
                     console.error("Failed to load from sheet:", err);
                     cachedProducts = [];
-                    cachedSubcategories = [];
+                    cachedCategories = [];
                     renderContent();
                 });
         }
@@ -115,6 +116,11 @@
         function filterBySubcategory(subcat) {
             selectedSubcategoryFilter = subcat;
             switchTab('home');
+        }
+
+        function selectCategory(catName) {
+            selectedCategory = catName;
+            renderContent();
         }
 
         function renderContent() {
@@ -159,27 +165,58 @@
                     </div>
                 `;
             } else if (currentTab === 'categories') {
-                // Display direct list of all subcategories from the worksheet
-                container.innerHTML = `
-                    <div class="space-y-3">
-                        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                            <i class="fa-solid fa-tags text-indigo-600 mr-1.5"></i> All Subcategories
-                        </h3>
-                        <div class="grid grid-cols-1 gap-2.5">
-                            ${cachedSubcategories.map(sub => `
-                                <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-200 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
-                                            <i class="fa-solid fa-tag text-sm"></i>
+                if (!selectedCategory) {
+                    // Step 1: Display Main Categories from Column B
+                    container.innerHTML = `
+                        <div class="space-y-3">
+                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                                <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> Categories
+                            </h3>
+                            <div class="grid grid-cols-1 gap-2.5">
+                                ${cachedCategories.map(cat => `
+                                    <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-200 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                                                <i class="fa-solid fa-folder-open"></i>
+                                            </div>
+                                            <span class="font-semibold text-gray-800 text-xs leading-relaxed">${cat.categoryName}</span>
                                         </div>
-                                        <span class="font-semibold text-gray-800 text-xs">${sub}</span>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
                                     </div>
-                                    <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
-                                </div>
-                            `).join('')}
+                                `).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    // Step 2: Display ONLY Subcategories belonging to the clicked Category
+                    const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
+                    const subcategories = matchedCat ? matchedCat.subcategories : [];
+
+                    container.innerHTML = `
+                        <div class="space-y-3">
+                            <button onclick="selectCategory(null)" class="text-xs text-indigo-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                <span>Back to Categories</span>
+                            </button>
+                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 truncate">
+                                <i class="fa-solid fa-tags text-indigo-600 mr-1.5"></i> ${selectedCategory}
+                            </h3>
+                            <div class="grid grid-cols-1 gap-2.5">
+                                ${subcategories.map(sub => `
+                                    <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-200 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                                                <i class="fa-solid fa-tag text-sm"></i>
+                                            </div>
+                                            <span class="font-semibold text-gray-800 text-xs">${sub}</span>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
             } else if (currentTab === 'cart') {
                 if (cart.length === 0) {
                     container.innerHTML = `
