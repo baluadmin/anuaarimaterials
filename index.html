@@ -34,7 +34,7 @@
                 <span class="text-xs mt-1">Home</span>
             </button>
             <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition">
-                <i class="fa-solid fa-grid-2 text-xl"></i>
+                <i class="fa-solid fa-layer-group text-xl"></i>
                 <span class="text-xs mt-1">Categories</span>
             </button>
             <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition relative">
@@ -156,7 +156,7 @@
                     <div class="grid grid-cols-2 gap-3">
                         ${categories.map(cat => `
                             <div onclick="filterByCategory('${cat}')" class="bg-white border border-gray-200 rounded-xl p-5 text-center shadow-sm hover:border-indigo-500 transition cursor-pointer flex flex-col items-center justify-center h-28">
-                                <i class="fa-solid fa-folder-open text-3xl text-indigo-600 mb-2"></i>
+                                <i class="fa-solid fa-layer-group text-3xl text-indigo-600 mb-2"></i>
                                 <span class="font-semibold text-gray-800 text-sm">${cat}</span>
                             </div>
                         `).join('')}
