@@ -8,65 +8,70 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen m-0">
+<body class="bg-slate-900 flex justify-center items-center h-screen m-0">
 
     <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-white flex flex-col relative overflow-hidden">
+    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-slate-50 flex flex-col relative overflow-hidden">
 
         <!-- TOP HEADER -->
-        <header class="bg-indigo-600 text-white p-3 flex justify-between items-center shadow-md z-10">
+        <header class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3.5 flex justify-between items-center shadow-md z-10">
             <div>
-                <h1 id="header-title" class="text-sm font-bold tracking-wide">ANU AARI MATERIALS</h1>
-                <a href="tel:9840450113" class="text-[11px] text-indigo-100 flex items-center space-x-1 mt-0.5 hover:underline">
+                <h1 id="header-title" class="text-sm font-bold tracking-wider">ANU AARI MATERIALS</h1>
+                <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline">
                     <i class="fa-solid fa-phone text-[10px]"></i>
                     <span>9840450113</span>
                 </a>
             </div>
-            <div class="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs font-bold shadow-inner">
+            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold shadow-inner">
                 A
             </div>
         </header>
 
         <!-- SEARCH BAR (Visible on Home Tab) -->
-        <div id="search-container" class="bg-indigo-600 px-3 pb-3 pt-1 z-10">
+        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3.5 pb-3.5 pt-1 z-10">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                     <i class="fa-solid fa-search text-xs"></i>
                 </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-9 pr-4 py-2 bg-white rounded-xl text-xs focus:outline-none shadow-sm text-gray-800 placeholder-gray-400">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-9 pr-4 py-2.5 bg-white/95 rounded-xl text-xs focus:outline-none shadow-sm text-gray-800 placeholder-gray-400">
             </div>
         </div>
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
             <div class="flex flex-col items-center justify-center h-full text-gray-400">
-                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 text-indigo-600"></i>
+                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 text-rose-600"></i>
                 <p class="text-xs">Loading items from Google Sheet...</p>
             </div>
         </main>
 
         <!-- FLOATING TOAST NOTIFICATION -->
-        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs px-4 py-2 rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none z-50">
+        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2 rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none z-50">
             Notification message
         </div>
 
         <!-- BOTTOM NAVIGATION BAR -->
         <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 shadow-lg z-10">
-            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-indigo-600 transition">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
                 <i class="fa-solid fa-house text-xl"></i>
-                <span class="text-xs mt-1">Home</span>
+                <span class="text-xs mt-1 font-medium">Home</span>
             </button>
-            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition">
+            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-gray-400 hover:text-rose-600 transition">
                 <i class="fa-solid fa-layer-group text-xl"></i>
-                <span class="text-xs mt-1">Categories</span>
+                <span class="text-xs mt-1 font-medium">Categories</span>
             </button>
-            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-gray-400 hover:text-indigo-600 transition relative">
+            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-gray-400 hover:text-rose-600 transition relative">
                 <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span class="text-xs mt-1">Cart</span>
-                <span id="cart-badge" class="absolute -top-1 right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+                <span class="text-xs mt-1 font-medium">Cart</span>
+                <span id="cart-badge" class="absolute -top-1 right-2 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
             </button>
         </nav>
 
@@ -74,14 +79,14 @@
 
     <!-- PRODUCT IMAGE MODAL -->
     <div id="image-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
-        <div class="bg-white rounded-2xl max-w-xs w-full p-4 relative text-center" onclick="event.stopPropagation()">
+        <div class="bg-white rounded-2xl max-w-xs w-full p-4 relative text-center shadow-xl" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-sm">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <img id="modal-img" src="" class="w-full h-56 object-cover rounded-xl mb-3 bg-gray-50 shadow-inner">
             <h3 id="modal-title" class="text-xs font-bold text-gray-800 mb-1"></h3>
             <p id="modal-id" class="text-[10px] text-gray-400 mb-2"></p>
-            <span id="modal-price" class="text-indigo-600 font-bold text-sm block"></span>
+            <span id="modal-price" class="text-rose-600 font-extrabold text-sm block"></span>
         </div>
     </div>
 
@@ -153,9 +158,9 @@
             ['home', 'categories', 'cart'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if (t === tab) {
-                    btn.className = "flex flex-col items-center text-indigo-600 transition";
+                    btn.className = "flex flex-col items-center text-rose-600 transition";
                 } else {
-                    btn.className = "flex flex-col items-center text-gray-400 hover:text-indigo-600 transition";
+                    btn.className = "flex flex-col items-center text-gray-400 hover:text-rose-600 transition";
                 }
             });
 
@@ -215,9 +220,9 @@
                 container.innerHTML = `
                     <div class="space-y-4">
                         ${selectedSubcategoryFilter !== 'All' ? `
-                            <div class="flex justify-between items-center bg-indigo-50 p-2 rounded-lg">
-                                <span class="text-xs font-bold text-indigo-700 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
-                                <button onclick="filterBySubcategory('All')" class="text-xs text-indigo-600 font-semibold hover:underline whitespace-nowrap ml-2">Show All</button>
+                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-2.5 rounded-xl shadow-sm">
+                                <span class="text-xs font-semibold text-rose-800 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
+                                <button onclick="filterBySubcategory('All')" class="text-xs text-rose-600 font-bold hover:underline whitespace-nowrap ml-2">Show All</button>
                             </div>
                         ` : ''}
 
@@ -240,14 +245,14 @@
                                         <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
                                         <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
                                         <div class="flex justify-between items-center mt-2">
-                                            <span class="text-indigo-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                            <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             
-                                            <div class="flex items-center space-x-1 bg-indigo-50 border border-indigo-100 rounded-lg p-1">
-                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-indigo-600 w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-100 transition active:scale-95">
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
-                                                <span class="text-xs font-bold text-indigo-700 px-1.5">${qty}</span>
-                                                <button onclick="increaseQuantity('${p.id}')" class="bg-indigo-600 text-white w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-700 transition active:scale-95">
+                                                <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -267,14 +272,14 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${cachedCategories.map(cat => `
-                                    <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-100 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between group">
+                                    <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                            <div class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition">
                                                 <i class="fa-solid fa-folder-open"></i>
                                             </div>
                                             <span class="font-semibold text-gray-800 text-xs">${cat.categoryName}</span>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-indigo-600 transition"></i>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
                                     </div>
                                 `).join('')}
                             </div>
@@ -286,23 +291,23 @@
 
                     container.innerHTML = `
                         <div class="space-y-3">
-                            <button onclick="selectCategory(null)" class="text-xs text-indigo-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                            <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Categories</span>
                             </button>
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 truncate">
-                                <i class="fa-solid fa-tags text-indigo-600 mr-1.5"></i> ${selectedCategory}
+                                <i class="fa-solid fa-tags text-rose-600 mr-1.5"></i> ${selectedCategory}
                             </h3>
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${subcategories.map(sub => `
-                                    <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-100 rounded-xl p-4 text-left shadow-sm hover:border-indigo-500 transition cursor-pointer flex items-center justify-between group">
+                                    <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                            <div class="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition">
                                                 <i class="fa-solid fa-tag text-sm"></i>
                                             </div>
                                             <span class="font-semibold text-gray-800 text-xs">${sub}</span>
                                         </div>
-                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-indigo-600 transition"></i>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
                                     </div>
                                 `).join('')}
                             </div>
@@ -313,7 +318,7 @@
                 if (cart.length === 0) {
                     container.innerHTML = `
                         <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 space-y-3 pt-20">
-                            <div class="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-1">
+                            <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-600 mb-1">
                                 <i class="fa-solid fa-cart-shopping text-3xl"></i>
                             </div>
                             <p class="text-sm font-bold text-gray-700">Your cart is empty</p>
@@ -331,15 +336,15 @@
                                             <img src="${item.image}" class="w-12 h-12 object-cover rounded-xl bg-gray-50">
                                             <div>
                                                 <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>
-                                                <span class="text-indigo-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
+                                                <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
-                                        <div class="flex items-center space-x-1 bg-gray-50 border border-gray-200 rounded-xl p-1">
-                                            <button onclick="decreaseQuantity('${item.id}')" class="text-gray-600 hover:text-red-500 w-6 h-6 flex items-center justify-center transition">
+                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 flex items-center justify-center transition">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
                                             <span class="text-xs font-bold px-1.5 text-gray-800">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${item.id}')" class="text-gray-600 hover:text-indigo-600 w-6 h-6 flex items-center justify-center transition">
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 flex items-center justify-center transition">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
@@ -349,9 +354,9 @@
                             <div class="bg-white border-t border-gray-100 pt-3">
                                 <div class="flex justify-between font-bold text-gray-800 mb-3 text-sm">
                                     <span>Total Amount:</span>
-                                    <span class="text-indigo-600 text-base">₹${total}</span>
+                                    <span class="text-rose-600 text-base">₹${total}</span>
                                 </div>
-                                <button onclick="showCheckoutForm()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-indigo-700 transition active:scale-[0.99]">
+                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99]">
                                     Proceed to Checkout
                                 </button>
                             </div>
@@ -368,23 +373,23 @@
                     <h2 class="text-sm font-bold text-gray-800 mb-2">Customer & Delivery Details</h2>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Full Name *</label>
-                        <input type="text" id="cust-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-indigo-600 transition" placeholder="Enter your name">
+                        <input type="text" id="cust-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Primary Phone Number *</label>
-                        <input type="tel" id="cust-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-indigo-600 transition" placeholder="9840450113">
+                        <input type="tel" id="cust-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="9840450113">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Secondary Phone (Optional)</label>
-                        <input type="tel" id="cust-sec-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-indigo-600 transition" placeholder="Alternative number">
+                        <input type="tel" id="cust-sec-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Alternative number">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Delivery Address *</label>
-                        <textarea id="cust-address" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-indigo-600 transition" rows="2" placeholder="House no, street, area"></textarea>
+                        <textarea id="cust-address" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" rows="2" placeholder="House no, street, area"></textarea>
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Special Instructions / Notes</label>
-                        <input type="text" id="cust-desc" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-indigo-600 transition" placeholder="Any specific requests">
+                        <input type="text" id="cust-desc" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Any specific requests">
                     </div>
                     <div class="pt-2 flex space-x-2">
                         <button onclick="switchTab('cart')" class="w-1/2 bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-semibold hover:bg-gray-200 transition">Back</button>
