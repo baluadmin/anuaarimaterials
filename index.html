@@ -56,15 +56,15 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        // Connected to your live Google Apps Script Web App
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
 
         let currentTab = 'home';
-        let cart = []; // Array of objects: { ...product, quantity: N }
+        let cart = []; 
         let selectedSubcategoryFilter = 'All';
         let selectedCategory = null;
         let cachedProducts = [];
         let cachedCategories = [];
+        let shuffledHomeProducts = []; // Stored so shuffle doesn't re-trigger on every quantity change
 
         function fetchSheetData() {
             fetch(GOOGLE_SCRIPT_URL)
@@ -73,6 +73,7 @@
                     if (data.status === "success") {
                         cachedProducts = data.products || [];
                         cachedCategories = data.categories || [];
+                        prepareHomeProducts();
                         renderContent();
                     } else {
                         console.error("Sheet error:", data.message);
@@ -94,6 +95,13 @@
             return arr;
         }
 
+        function prepareHomeProducts() {
+            let filteredProducts = selectedSubcategoryFilter === 'All' 
+                ? cachedProducts 
+                : cachedProducts.filter(p => p.subcategory === selectedSubcategoryFilter);
+            shuffledHomeProducts = shuffleArray(filteredProducts);
+        }
+
         function switchTab(tab) {
             currentTab = tab;
             ['home', 'categories', 'cart'].forEach(t => {
@@ -109,6 +117,7 @@
 
         function filterBySubcategory(subcat) {
             selectedSubcategoryFilter = subcat;
+            prepareHomeProducts();
             switchTab('home');
         }
 
@@ -126,12 +135,6 @@
             const container = document.getElementById('main-content');
 
             if (currentTab === 'home') {
-                let filteredProducts = selectedSubcategoryFilter === 'All' 
-                    ? cachedProducts 
-                    : cachedProducts.filter(p => p.subcategory === selectedSubcategoryFilter);
-
-                filteredProducts = shuffleArray(filteredProducts);
-
                 container.innerHTML = `
                     <div class="space-y-4">
                         ${selectedSubcategoryFilter !== 'All' ? `
@@ -142,12 +145,12 @@
                         ` : ''}
                         
                         <div class="grid grid-cols-2 gap-3 pt-1">
-                            ${filteredProducts.length === 0 ? `
+                            ${shuffledHomeProducts.length === 0 ? `
                                 <div class="col-span-2 text-center py-10 text-gray-400">
                                     <i class="fa-solid fa-box-open text-3xl mb-2"></i>
                                     <p class="text-xs">No items found.</p>
                                 </div>
-                            ` : filteredProducts.map(p => {
+                            ` : shuffledHomeProducts.map(p => {
                                 const qty = getProductQuantity(p.id);
                                 return `
                                     <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
@@ -160,11 +163,11 @@
                                                     <i class="fa-solid fa-plus text-xs"></i>
                                                 </button>
                                             ` : `
-                                                <div class="flex items-center space-x-1.5 bg-indigo-50 border border-indigo-200 rounded-lg p-0.5">
+                                                <div class="flex items-center space-x-1 bg-indigo-50 border border-indigo-200 rounded-lg p-1">
                                                     <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-indigo-600 w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-100 transition">
                                                         <i class="fa-solid fa-minus text-[10px]"></i>
                                                     </button>
-                                                    <span class="text-xs font-bold text-indigo-700 px-1">${qty}</span>
+                                                    <span class="text-xs font-bold text-indigo-700 px-1.5">${qty}</span>
                                                     <button onclick="increaseQuantity('${p.id}')" class="bg-indigo-600 text-white w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-700 transition">
                                                         <i class="fa-solid fa-plus text-[10px]"></i>
                                                     </button>
@@ -254,7 +257,7 @@
                                             <button onclick="decreaseQuantity('${item.id}')" class="text-gray-600 hover:text-red-500 w-6 h-6 flex items-center justify-center">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
-                                            <span class="text-xs font-bold px-1">${item.quantity}</span>
+                                            <span class="text-xs font-bold px-1.5">${item.quantity}</span>
                                             <button onclick="increaseQuantity('${item.id}')" class="text-gray-600 hover:text-indigo-600 w-6 h-6 flex items-center justify-center">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
@@ -360,12 +363,14 @@
                 alert("Order placed successfully! Recorded in Google Sheets.");
                 cart = [];
                 updateCartBadge();
+                prepareHomeProducts();
                 switchTab('home');
             }).catch(err => {
                 console.error("Error submitting order:", err);
                 alert("Order submitted!");
                 cart = [];
                 updateCartBadge();
+                prepareHomeProducts();
                 switchTab('home');
             });
         }
