@@ -47,7 +47,7 @@
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
-            <!-- Content will load here -->
+            <!-- Content renders here instantly -->
         </main>
 
         <!-- FLOATING TOAST NOTIFICATION -->
@@ -97,7 +97,6 @@
         let selectedCategory = null;
         let searchQuery = '';
         
-        // Default Mock Data so the app opens instantly even if fetch hangs
         let cachedProducts = [
             { id: "AB0009", name: "Bunch Beads", price: 10.00, subcategory: "Bunch Beads", image: "https://via.placeholder.com/150" },
             { id: "AB0039", name: "Hanging Beads", price: 6.00, subcategory: "Hanging Beads", image: "https://via.placeholder.com/150" },
@@ -108,11 +107,12 @@
         ];
         let shuffledHomeProducts = [];
 
-        function fetchSheetData() {
+        function initApp() {
+            // Render immediately using fallback data so the app opens instantly
             prepareHomeProducts();
             renderContent();
 
-            // Attempt to fetch live data in the background
+            // Then try updating from Google Sheet in the background without blocking
             fetch(GOOGLE_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
@@ -124,7 +124,7 @@
                     }
                 })
                 .catch(err => {
-                    console.log("Using local fallback data due to network restriction:", err);
+                    console.log("Background fetch skipped/blocked, running on local data.");
                 });
         }
 
@@ -504,8 +504,8 @@
             }
         }
 
-        // Initialize App Immediately
-        fetchSheetData();
+        // Run app initialization immediately on load
+        initApp();
     </script>
 </body>
 </html>
