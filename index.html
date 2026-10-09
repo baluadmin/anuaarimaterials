@@ -64,7 +64,7 @@
         let selectedCategory = null;
         let cachedProducts = [];
         let cachedCategories = [];
-        let shuffledHomeProducts = []; // Stored so shuffle doesn't re-trigger on every quantity change
+        let shuffledHomeProducts = [];
 
         function fetchSheetData() {
             fetch(GOOGLE_SCRIPT_URL)
@@ -158,21 +158,17 @@
                                         <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
                                         <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
                                         <div class="flex justify-between items-center mt-2">
-                                            <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>${qty === 0 ? `
-                                                <button onclick="addToCart('${p.id}')" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
-                                                    <i class="fa-solid fa-plus text-xs"></i>
+                                            <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>
+                                            
+                                            <div class="flex items-center space-x-1 bg-indigo-50 border border-indigo-200 rounded-lg p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-indigo-600 w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-100 transition">
+                                                    <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
-                                            ` : `
-                                                <div class="flex items-center space-x-1 bg-indigo-50 border border-indigo-200 rounded-lg p-1">
-                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-indigo-600 w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-100 transition">
-                                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                                    </button>
-                                                    <span class="text-xs font-bold text-indigo-700 px-1.5">${qty}</span>
-                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-indigo-600 text-white w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-700 transition">
-                                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    </button>
-                                                </div>
-                                            `}
+                                                <span class="text-xs font-bold text-indigo-700 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-indigo-600 text-white w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-700 transition">
+                                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 `;
@@ -375,7 +371,7 @@
             });
         }
 
-        function addToCart(productId) {
+        function increaseQuantity(productId) {
             const product = cachedProducts.find(p => p.id === productId);
             if (product) {
                 const existing = cart.find(i => i.id === productId);
@@ -387,10 +383,6 @@
                 updateCartBadge();
                 renderContent();
             }
-        }
-
-        function increaseQuantity(productId) {
-            addToCart(productId);
         }
 
         function decreaseQuantity(productId) {
