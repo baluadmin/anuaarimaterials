@@ -60,7 +60,7 @@
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
 
         let currentTab = 'home';
-        let cart = [];
+        let cart = []; // Array of objects: { ...product, quantity: N }
         let selectedSubcategoryFilter = 'All';
         let selectedCategory = null;
         let cachedProducts = [];
@@ -117,6 +117,11 @@
             renderContent();
         }
 
+        function getProductQuantity(productId) {
+            const item = cart.find(i => i.id === productId);
+            return item ? item.quantity : 0;
+        }
+
         function renderContent() {
             const container = document.getElementById('main-content');
 
@@ -142,25 +147,38 @@
                                     <i class="fa-solid fa-box-open text-3xl mb-2"></i>
                                     <p class="text-xs">No items found.</p>
                                 </div>
-                            ` : filteredProducts.map(p => `
-                                <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                                    <img src="${p.image}" class="w-full h-28 object-cover rounded-lg mb-2 bg-gray-50">
-                                    <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                    <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
-                                    <div class="flex justify-between items-center mt-2">
-                                        <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>
-                                        <button onclick="addToCart('${p.id}')" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
-                                            <i class="fa-solid fa-plus text-xs"></i>
-                                        </button>
+                            ` : filteredProducts.map(p => {
+                                const qty = getProductQuantity(p.id);
+                                return `
+                                    <div class="bg-white border border-gray-200 rounded-xl p-3 flex flex-col justify-between shadow-sm">
+                                        <img src="${p.image}" class="w-full h-28 object-cover rounded-lg mb-2 bg-gray-50">
+                                        <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
+                                        <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-indigo-600 font-bold text-sm">₹${p.price.toFixed(2)}</span>${qty === 0 ? `
+                                                <button onclick="addToCart('${p.id}')" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center hover:bg-indigo-700 transition">
+                                                    <i class="fa-solid fa-plus text-xs"></i>
+                                                </button>
+                                            ` : `
+                                                <div class="flex items-center space-x-1.5 bg-indigo-50 border border-indigo-200 rounded-lg p-0.5">
+                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-indigo-600 w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-100 transition">
+                                                        <i class="fa-solid fa-minus text-[10px]"></i>
+                                                    </button>
+                                                    <span class="text-xs font-bold text-indigo-700 px-1">${qty}</span>
+                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-indigo-600 text-white w-6 h-6 rounded flex items-center justify-center shadow-sm hover:bg-indigo-700 transition">
+                                                        <i class="fa-solid fa-plus text-[10px]"></i>
+                                                    </button>
+                                                </div>
+                                            `}
+                                        </div>
                                     </div>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
-                    // Step 1: Display Main Categories from Column B
                     container.innerHTML = `
                         <div class="space-y-3">
                             <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
@@ -182,7 +200,6 @@
                         </div>
                     `;
                 } else {
-                    // Step 2: Display ONLY Subcategories belonging to the clicked Category
                     const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
@@ -220,22 +237,28 @@
                         </div>
                     `;
                 } else {
-                    const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
                         <div class="space-y-3 flex flex-col h-full justify-between pb-10">
                             <div class="space-y-2 overflow-y-auto flex-1">
-                                ${cart.map((item, index) => `
+                                ${cart.map(item => `
                                     <div class="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
                                         <div class="flex items-center space-x-3">
                                             <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg">
                                             <div>
                                                 <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>
-                                                <span class="text-indigo-600 font-semibold text-xs">₹${item.price.toFixed(2)}</span>
+                                                <span class="text-indigo-600 font-semibold text-xs">₹${item.price.toFixed(2)} x ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
-                                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-700 p-2">
-                                            <i class="fa-solid fa-trash text-xs"></i>
-                                        </button>
+                                        <div class="flex items-center space-x-1 bg-gray-50 border border-gray-200 rounded-lg p-1">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-gray-600 hover:text-red-500 w-6 h-6 flex items-center justify-center">
+                                                <i class="fa-solid fa-minus text-[10px]"></i>
+                                            </button>
+                                            <span class="text-xs font-bold px-1">${item.quantity}</span>
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-gray-600 hover:text-indigo-600 w-6 h-6 flex items-center justify-center">
+                                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -299,7 +322,7 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${item.name} (₹${item.price})`).join(', ');
+            const itemsList = cart.map(item => `${item.name} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
@@ -350,22 +373,39 @@
         function addToCart(productId) {
             const product = cachedProducts.find(p => p.id === productId);
             if (product) {
-                cart.push(product);
+                const existing = cart.find(i => i.id === productId);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
                 updateCartBadge();
-                alert(`${product.name} added to cart!`);
+                renderContent();
             }
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartBadge();
-            renderContent();
+        function increaseQuantity(productId) {
+            addToCart(productId);
+        }
+
+        function decreaseQuantity(productId) {
+            const existingIndex = cart.findIndex(i => i.id === productId);
+            if (existingIndex > -1) {
+                if (cart[existingIndex].quantity > 1) {
+                    cart[existingIndex].quantity -= 1;
+                } else {
+                    cart.splice(existingIndex, 1);
+                }
+                updateCartBadge();
+                renderContent();
+            }
         }
 
         function updateCartBadge() {
             const badge = document.getElementById('cart-badge');
-            if (cart.length > 0) {
-                badge.innerText = cart.length;
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalCount > 0) {
+                badge.innerText = totalCount;
                 badge.classList.remove('hidden');
             } else {
                 badge.classList.add('hidden');
