@@ -11,12 +11,10 @@
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
     <style>
-        /* Smooth scrolling behavior for category chips */
         .smooth-scroll {
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
-        /* Hide scrollbars for clean look */
         .smooth-scroll::-webkit-scrollbar { display: none; }
         .smooth-scroll { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -107,6 +105,7 @@
         let cachedProducts = [];
         let cachedCategories = [];
         let shuffledHomeProducts = [];
+        let chipScrollPosition = 0; // Remembers scroll position of the filter bar
 
         function fetchSheetData() {
             fetch(GOOGLE_SCRIPT_URL)
@@ -180,9 +179,23 @@
         }
 
         function filterBySubcategory(subcat) {
+            // Save current scroll position before re-rendering
+            const chipContainer = document.getElementById('chip-scroll-container');
+            if (chipContainer) {
+                chipScrollPosition = chipContainer.scrollLeft;
+            }
+
             selectedSubcategoryFilter = subcat;
             prepareHomeProducts();
-            switchTab('home');
+            renderContent();
+
+            // Restore scroll position after render
+            setTimeout(() => {
+                const newChipContainer = document.getElementById('chip-scroll-container');
+                if (newChipContainer) {
+                    newChipContainer.scrollLeft = chipScrollPosition;
+                }
+            }, 0);
         }
 
         function selectCategory(catName) {
@@ -231,8 +244,8 @@
 
                 container.innerHTML = `
                     <div class="space-y-4">
-                        <!-- Horizontal Scrollable Subcategory Chips Filter with Smooth Scrolling -->
-                        <div class="flex space-x-2 overflow-x-auto smooth-scroll py-1 w-full whitespace-nowrap">
+                        <!-- Horizontal Scrollable Subcategory Chips Filter -->
+                        <div id="chip-scroll-container" onscroll="chipScrollPosition = this.scrollLeft" class="flex space-x-2 overflow-x-auto smooth-scroll py-1 w-full whitespace-nowrap">
                             ${allSubcategories.map(sub => `
                                 <button onclick="filterBySubcategory('${sub}')" class="inline-block px-4 py-2 rounded-full text-xs font-semibold transition shrink-0 ${selectedSubcategoryFilter === sub ? 'bg-indigo-600 text-white shadow' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
                                     ${sub}
@@ -277,6 +290,15 @@
                         </div>
                     </div>
                 `;
+
+                // Restore scroll position right after DOM update
+                setTimeout(() => {
+                    const chipContainer = document.getElementById('chip-scroll-container');
+                    if (chipContainer) {
+                        chipContainer.scrollLeft = chipScrollPosition;
+                    }
+                }, 0);
+
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
                     container.innerHTML = `
