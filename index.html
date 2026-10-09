@@ -12,6 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        @keyframes spin-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
     </style>
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
@@ -47,9 +54,15 @@
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
-            <div class="flex flex-col items-center justify-center h-full text-gray-400">
-                <i class="fa-solid fa-spinner fa-spin text-3xl mb-2 text-rose-600"></i>
-                <p class="text-xs">Loading items from Google Sheet...</p>
+            <div class="flex flex-col items-center justify-center h-full text-gray-400 space-y-4">
+                <div class="relative w-28 h-28 flex items-center justify-center">
+                    <!-- Spinning Circular Ring with Text -->
+                    <div class="absolute inset-0 border-2 border-dashed border-rose-500 rounded-full animate-spin-slow"></div>
+                    <div class="w-16 h-16 bg-rose-50 rounded-full flex items-center justify-center shadow-inner">
+                        <span class="text-rose-700 font-extrabold text-xs">ANU</span>
+                    </div>
+                </div>
+                <p class="text-xs font-medium text-rose-700 tracking-wide">Loading items from Google Sheet...</p>
             </div>
         </main>
 
@@ -291,7 +304,7 @@
 
                     container.innerHTML = `
                         <div class="space-y-3">
-                            <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                            <button onclick="selectCategory(null)" class="text-xs font-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Categories</span>
                             </button>
