@@ -98,9 +98,9 @@
         let searchQuery = '';
         
         let cachedProducts = [
-            { id: "AB0009", name: "Bunch Beads", price: 10.00, subcategory: "Bunch Beads", image: "https://via.placeholder.com/150" },
-            { id: "AB0039", name: "Hanging Beads", price: 6.00, subcategory: "Hanging Beads", image: "https://via.placeholder.com/150" },
-            { id: "AB0045", name: "Sugar Beads", price: 15.00, subcategory: "Sugar Beads", image: "https://via.placeholder.com/150" }
+            { id: "AB0009", name: "Bunch Beads", price: 10.00, subcategory: "Bunch Beads", image: "https://images.unsplash.com/photo-1611591483321-727b1407e33e?w=300" },
+            { id: "AB0039", name: "Hanging Beads", price: 6.00, subcategory: "Hanging Beads", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300" },
+            { id: "AB0045", name: "Sugar Beads", price: 15.00, subcategory: "Sugar Beads", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300" }
         ];
         let cachedCategories = [
             { categoryName: "Beads", subcategories: ["Bunch Beads", "Hanging Beads", "Sugar Beads"] }
@@ -108,11 +108,9 @@
         let shuffledHomeProducts = [];
 
         function initApp() {
-            // Render immediately using fallback data so the app opens instantly
             prepareHomeProducts();
             renderContent();
 
-            // Then try updating from Google Sheet in the background without blocking
             fetch(GOOGLE_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
@@ -124,7 +122,7 @@
                     }
                 })
                 .catch(err => {
-                    console.log("Background fetch skipped/blocked, running on local data.");
+                    console.log("Background fetch skipped, running on local data.");
                 });
         }
 
@@ -504,7 +502,7 @@
             }
         }
 
-        // Run app initialization immediately on load
+        // Initialize App Immediately
         initApp();
     </script>
 </body>
