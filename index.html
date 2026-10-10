@@ -47,7 +47,17 @@
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
         <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
-            <!-- Content renders here instantly -->
+            <!-- Welcome Loading Screen -->
+            <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
+                <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 shadow-inner">
+                    <i class="fa-solid fa-store text-xl"></i>
+                </div>
+                <div class="space-y-1">
+                    <h2 class="text-xs font-bold text-gray-800 tracking-wider">WELCOME TO ANU AARI MATERIALS</h2>
+                    <p class="text-[11px] text-gray-500 font-medium">PLEASE WAIT...</p>
+                </div>
+                <div class="w-6 h-6 border-2 border-rose-600 border-t-transparent rounded-full animate-spin mt-2"></div>
+            </div>
         </main>
 
         <!-- FLOATING TOAST NOTIFICATION -->
@@ -97,32 +107,36 @@
         let selectedCategory = null;
         let searchQuery = '';
         
-        let cachedProducts = [
-            { id: "AB0009", name: "Bunch Beads", price: 10.00, subcategory: "Bunch Beads", image: "https://images.unsplash.com/photo-1611591483321-727b1407e33e?w=300" },
-            { id: "AB0039", name: "Hanging Beads", price: 6.00, subcategory: "Hanging Beads", image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=300" },
-            { id: "AB0045", name: "Sugar Beads", price: 15.00, subcategory: "Sugar Beads", image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300" }
-        ];
-        let cachedCategories = [
-            { categoryName: "Beads", subcategories: ["Bunch Beads", "Hanging Beads", "Sugar Beads"] }
-        ];
+        let cachedProducts = [];
+        let cachedCategories = [];
         let shuffledHomeProducts = [];
 
         function initApp() {
-            prepareHomeProducts();
-            renderContent();
-
             fetch(GOOGLE_SCRIPT_URL)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.status === "success" && data.products && data.products.length > 0) {
-                        cachedProducts = data.products;
-                        cachedCategories = data.categories || cachedCategories;
+                    if (data.status === "success") {
+                        cachedProducts = data.products || [];
+                        cachedCategories = data.categories || [];
                         prepareHomeProducts();
                         renderContent();
+                    } else {
+                        document.getElementById('main-content').innerHTML = `
+                            <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
+                                <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
+                                <p>Error loading sheet data: ${data.message}</p>
+                            </div>
+                        `;
                     }
                 })
                 .catch(err => {
-                    console.log("Background fetch skipped, running on local data.");
+                    console.error("Failed to load from sheet:", err);
+                    document.getElementById('main-content').innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
+                            <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
+                            <p>Failed to connect to Google Sheet. Please check your connection or URL.</p>
+                        </div>
+                    `;
                 });
         }
 
@@ -502,7 +516,7 @@
             }
         }
 
-        // Initialize App Immediately
+        // Initialize App on Load
         initApp();
     </script>
 </body>
