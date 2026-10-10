@@ -284,4 +284,237 @@
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
                                 <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> All Categories
                             </h3>
-                            <div class="grid grid-cols-1 gap
+                            <div class="grid grid-cols-1 gap-2.5">
+                                ${cachedCategories.map(cat => `
+                                    <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition">
+                                                <i class="fa-solid fa-folder-open"></i>
+                                            </div>
+                                            <span class="font-semibold text-gray-800 text-xs">${cat.categoryName}</span>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
+                    const subcategories = matchedCat ? matchedCat.subcategories : [];
+
+                    container.innerHTML = `
+                        <div class="space-y-3">
+                            <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                <span>Back to Categories</span>
+                            </button>
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 truncate">
+                                <i class="fa-solid fa-tags text-rose-600 mr-1.5"></i> ${selectedCategory}
+                            </h3>
+                            <div class="grid grid-cols-1 gap-2.5">
+                                ${subcategories.map(sub => `
+                                    <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition">
+                                                <i class="fa-solid fa-tag text-sm"></i>
+                                            </div>
+                                            <span class="font-semibold text-gray-800 text-xs">${sub}</span>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (currentTab === 'cart') {
+                if (cart.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 space-y-3 pt-20">
+                            <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-600 mb-1">
+                                <i class="fa-solid fa-cart-shopping text-3xl"></i>
+                            </div>
+                            <p class="text-sm font-bold text-gray-700">Your cart is empty</p>
+                            <p class="text-xs text-gray-400 max-w-[200px]">Add items from the home screen to place your order.</p>
+                        </div>
+                    `;
+                } else {
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+                    container.innerHTML = `
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-10">
+                            <div class="space-y-2 overflow-y-auto flex-1 pr-1">
+                                ${cart.map(item => `
+                                    <div class="flex items-center justify-between bg-white border border-gray-100 p-3 rounded-2xl shadow-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="${item.image}" class="w-12 h-12 object-cover rounded-xl bg-gray-50">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>
+                                                <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 flex items-center justify-center transition">
+                                                <i class="fa-solid fa-minus text-[10px]"></i>
+                                            </button>
+                                            <span class="text-xs font-bold px-1.5 text-gray-800">${item.quantity}</span>
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 flex items-center justify-center transition">
+                                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="bg-white border-t border-gray-100 pt-3">
+                                <div class="flex justify-between font-bold text-gray-800 mb-3 text-sm">
+                                    <span>Total Amount:</span>
+                                    <span class="text-rose-600 text-base">₹${total}</span>
+                                </div>
+                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99]">
+                                    Proceed to Checkout
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function showCheckoutForm() {
+            const container = document.getElementById('main-content');
+            container.innerHTML = `
+                <div class="space-y-3 pb-10">
+                    <h2 class="text-sm font-bold text-gray-800 mb-2">Customer & Delivery Details</h2>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Full Name *</label>
+                        <input type="text" id="cust-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Primary Phone Number *</label>
+                        <input type="tel" id="cust-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="9840450113">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Secondary Phone (Optional)</label>
+                        <input type="tel" id="cust-sec-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Alternative number">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Delivery Address *</label>
+                        <textarea id="cust-address" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" rows="2" placeholder="House no, street, area"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-gray-600">Special Instructions / Notes</label>
+                        <input type="text" id="cust-desc" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Any specific requests">
+                    </div>
+                    <div class="pt-2 flex space-x-2">
+                        <button onclick="switchTab('cart')" class="w-1/2 bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-semibold hover:bg-gray-200 transition">Back</button>
+                        <button onclick="submitOrderToSheet()" class="w-1/2 bg-green-600 text-white py-3 rounded-xl text-xs font-semibold shadow hover:bg-green-700 transition">Place Order</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitOrderToSheet() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const secPhone = document.getElementById('cust-sec-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            const desc = document.getElementById('cust-desc').value.trim();
+
+            if (!name || !phone || !address) {
+                showToast("Please fill in required fields.");
+                return;
+            }
+
+            const itemsList = cart.map(item => `${item.name} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
+            const timestamp = new Date().toLocaleString();
+
+            const orderPayload = {
+                Type: "Order",
+                Timestamp: timestamp,
+                Customer_Name: name,
+                Primary_Phone: phone,
+                Items: itemsList,
+                Address: address,
+                Secondary_Phone: secPhone,
+                Description: desc
+            };
+
+            const loginPayload = {
+                Type: "Login",
+                Customer_Name: name,
+                Primary_Phone: phone
+            };
+
+            showToast("Submitting order...");
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderPayload)
+            }).then(() => {
+                return fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginPayload)
+                });
+            }).then(() => {
+                showToast("Order placed successfully!");
+                cart = [];
+                updateCartBadge();
+                prepareHomeProducts();
+                switchTab('home');
+            }).catch(err => {
+                console.error("Error submitting order:", err);
+                showToast("Order submitted!");
+                cart = [];
+                updateCartBadge();
+                prepareHomeProducts();
+                switchTab('home');
+            });
+        }
+
+        function increaseQuantity(productId) {
+            const product = cachedProducts.find(p => p.id === productId);
+            if (product) {
+                const existing = cart.find(i => i.id === productId);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({ ...product, quantity: 1 });
+                }
+                updateCartBadge();
+                renderContent();
+            }
+        }
+
+        function decreaseQuantity(productId) {
+            const existingIndex = cart.findIndex(i => i.id === productId);
+            if (existingIndex > -1) {
+                if (cart[existingIndex].quantity > 1) {
+                    cart[existingIndex].quantity -= 1;
+                } else {
+                    cart.splice(existingIndex, 1);
+                }
+                updateCartBadge();
+                renderContent();
+            }
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalCount > 0) {
+                badge.innerText = totalCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Initialize App on Load
+        initApp();
+    </script>
+</body>
+</html>
