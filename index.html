@@ -21,8 +21,8 @@
     <!-- Mobile Frame Container -->
     <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-slate-50 flex flex-col relative overflow-hidden">
 
-        <!-- TOP HEADER (Avatar removed) -->
-        <header class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3.5 flex justify-between items-center shadow-md z-10">
+        <!-- TOP HEADER -->
+        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3.5 flex justify-between items-center shadow-md z-10 hidden">
             <div>
                 <h1 id="header-title" class="text-sm font-bold tracking-wider">ANU AARI MATERIALS</h1>
                 <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline">
@@ -30,10 +30,13 @@
                     <span>9840450113</span>
                 </a>
             </div>
+            <button onclick="logout()" class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg text-white hover:bg-white/30 transition">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+            </button>
         </header>
 
         <!-- SEARCH BAR (Visible on Home Tab) -->
-        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3.5 pb-3.5 pt-1 z-10">
+        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3.5 pb-3.5 pt-1 z-10 hidden">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                     <i class="fa-solid fa-search text-xs"></i>
@@ -63,7 +66,7 @@
         </div>
 
         <!-- BOTTOM NAVIGATION BAR -->
-        <nav class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 shadow-lg z-10">
+        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 shadow-lg z-10 hidden">
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
                 <i class="fa-solid fa-house text-xl"></i>
                 <span class="text-xs mt-1 font-medium">Home</span>
@@ -107,7 +110,9 @@
         
         let cachedProducts = [];
         let cachedCategories = [];
+        let cachedLogins = [];
         let shuffledHomeProducts = [];
+        let currentUser = null;
 
         function initApp() {
             const timeoutId = setTimeout(() => {
@@ -130,8 +135,16 @@
                     if (data.status === "success") {
                         cachedProducts = data.products || [];
                         cachedCategories = data.categories || [];
-                        prepareHomeProducts();
-                        renderContent();
+                        cachedLogins = data.logins || [];
+                        
+                        // Check if user session already exists in localStorage
+                        const savedUser = localStorage.getItem('anu_aari_user');
+                        if (savedUser) {
+                            currentUser = JSON.parse(savedUser);
+                            showAppUI();
+                        } else {
+                            renderLoginScreen();
+                        }
                     } else {
                         document.getElementById('main-content').innerHTML = `
                             <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
@@ -153,6 +166,77 @@
                         </div>
                     `;
                 });
+        }
+
+        function renderLoginScreen() {
+            document.getElementById('app-header').classList.add('hidden');
+            document.getElementById('search-container').classList.add('hidden');
+            document.getElementById('bottom-nav').classList.add('hidden');
+
+            const container = document.getElementById('main-content');
+            container.innerHTML = `
+                <div class="flex flex-col justify-center h-full px-6 space-y-4">
+                    <div class="text-center space-y-1 mb-2">
+                        <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-3 shadow-inner">
+                            <i class="fa-solid fa-lock text-xl"></i>
+                        </div>
+                        <h2 class="text-sm font-bold text-gray-800 tracking-wider">MEMBER LOGIN</h2>
+                        <p class="text-[11px] text-gray-500">Enter your mobile number and password to access</p>
+                    </div>
+                    <div class="space-y-3 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Mobile Number *</label>
+                            <input type="tel" id="login-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter mobile number">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600">Password *</label>
+                            <input type="password" id="login-password" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter password">
+                        </div>
+                        <button onclick="handleLogin()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] mt-2 text-xs">
+                            Login to Store
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleLogin() {
+            const phoneInput = document.getElementById('login-phone').value.trim();
+            const passInput = document.getElementById('login-password').value.trim();
+
+            if (!phoneInput || !passInput) {
+                showToast("Please fill in both fields.");
+                return;
+            }
+
+            // Verify against cached logins from sheet
+            const matchedUser = cachedLogins.find(u => String(u.mobile) === phoneInput && String(u.password) === passInput);
+
+            if (matchedUser) {
+                currentUser = matchedUser;
+                localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
+                showToast(`Welcome back, ${currentUser.name}!`);
+                showAppUI();
+            } else {
+                showToast("Invalid mobile number or password.");
+            }
+        }
+
+        function showAppUI() {
+            document.getElementById('app-header').classList.remove('hidden');
+            document.getElementById('search-container').classList.remove('hidden');
+            document.getElementById('bottom-nav').classList.remove('hidden');
+            prepareHomeProducts();
+            switchTab('home');
+        }
+
+        function logout() {
+            localStorage.removeItem('anu_aari_user');
+            currentUser = null;
+            cart = [];
+            updateCartBadge();
+            renderLoginScreen();
+            showToast("Logged out successfully");
         }
 
         function shuffleArray(array) {
@@ -476,11 +560,11 @@
                     <h2 class="text-sm font-bold text-gray-800 mb-2">Customer & Delivery Details</h2>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Full Name *</label>
-                        <input type="text" id="cust-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
+                        <input type="text" id="cust-name" value="${currentUser ? currentUser.name : ''}" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Primary Phone Number *</label>
-                        <input type="tel" id="cust-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="9840450113">
+                        <input type="tel" id="cust-phone" value="${currentUser ? currentUser.mobile : ''}" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="9840450113">
                     </div>
                     <div>
                         <label class="text-xs font-semibold text-gray-600">Secondary Phone (Optional)</label>
