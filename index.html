@@ -305,7 +305,7 @@
                 `;
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
-                    // Level 1: Categories List with Images
+                    // Level 1: Categories List with Shuffled Product Images
                     container.innerHTML = `
                         <div class="space-y-3">
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -313,8 +313,12 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${cachedCategories.map(cat => {
-                                    const sampleProduct = cachedProducts.find(p => p.category === cat.categoryName);
-                                    const catImage = cat.image || (sampleProduct ? sampleProduct.image : '');
+                                    const catProducts = cachedProducts.filter(p => p.category === cat.categoryName);
+                                    let catImage = cat.image || '';
+                                    if (!catImage && catProducts.length > 0) {
+                                        const shuffledCatProducts = shuffleArray(catProducts);
+                                        catImage = shuffledCatProducts[0].image;
+                                    }
 
                                     return `
                                         <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-100 rounded-2xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
@@ -332,7 +336,7 @@
                         </div>
                     `;
                 } else if (!selectedSubcategory) {
-                    // Level 2: Subcategories List with Images
+                    // Level 2: Subcategories List with Shuffled Product Images
                     const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
@@ -347,8 +351,12 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${subcategories.map(sub => {
-                                    const sampleSubProduct = cachedProducts.find(p => p.subcategory === sub);
-                                    const subImage = sampleSubProduct ? sampleSubProduct.image : '';
+                                    const subProducts = cachedProducts.filter(p => p.subcategory === sub);
+                                    let subImage = '';
+                                    if (subProducts.length > 0) {
+                                        const shuffledSubProducts = shuffleArray(subProducts);
+                                        subImage = shuffledSubProducts[0].image;
+                                    }
 
                                     return `
                                         <div onclick="selectSubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
