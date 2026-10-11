@@ -16,83 +16,83 @@
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="bg-slate-900 flex justify-center items-center h-screen m-0">
+<body class="bg-slate-950 flex justify-center items-center h-screen m-0">
 
     <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-slate-50 flex flex-col relative overflow-hidden">
+    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col relative overflow-hidden border border-zinc-800">
 
         <!-- TOP HEADER -->
-        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3.5 flex justify-between items-center shadow-md z-10 hidden">
+        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-4 flex justify-between items-center shadow-md z-10 hidden">
             <div>
-                <h1 id="header-title" class="text-sm font-bold tracking-wider">ANU AARI MATERIALS</h1>
-                <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline">
+                <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase">ANU AARI MATERIALS</h1>
+                <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
                     <i class="fa-solid fa-phone text-[10px]"></i>
                     <span>9840450113</span>
                 </a>
             </div>
-            <button onclick="logout()" class="text-[11px] bg-white/20 px-2.5 py-1 rounded-lg text-white hover:bg-white/30 transition">
+            <button onclick="logout()" class="text-[11px] bg-white/20 px-3 py-1.5 rounded-xl text-white hover:bg-white/30 transition font-medium backdrop-blur-sm">
                 <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
             </button>
         </header>
 
         <!-- SEARCH BAR (Visible on Home Tab) -->
-        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3.5 pb-3.5 pt-1 z-10 hidden">
+        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-4 pb-4 pt-1 z-10 hidden">
             <div class="relative">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <i class="fa-solid fa-search text-xs"></i>
                 </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-9 pr-4 py-2.5 bg-white/95 rounded-xl text-xs focus:outline-none shadow-sm text-gray-800 placeholder-gray-400">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-3 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
             </div>
         </div>
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
-        <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4">
+        <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4 bg-zinc-100/70">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
-                <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 shadow-inner">
+                <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
                     <i class="fa-solid fa-store text-xl"></i>
                 </div>
                 <div class="space-y-1">
-                    <h2 class="text-xs font-bold text-gray-800 tracking-wider">WELCOME TO ANU AARI MATERIALS</h2>
-                    <p class="text-[11px] text-gray-500 font-medium">PLEASE WAIT...</p>
+                    <h2 class="text-xs font-bold text-zinc-800 tracking-wider">WELCOME TO ANU AARI MATERIALS</h2>
+                    <p class="text-[11px] text-zinc-500 font-medium">LOADING STORE...</p>
                 </div>
                 <div class="w-6 h-6 border-2 border-rose-600 border-t-transparent rounded-full animate-spin mt-2"></div>
             </div>
         </main>
 
         <!-- FLOATING TOAST NOTIFICATION -->
-        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2 rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none z-50">
+        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-zinc-900 text-white text-xs px-4 py-2.5 rounded-2xl shadow-xl transition-all duration-300 opacity-0 pointer-events-none z-50 font-medium border border-zinc-800">
             Notification message
         </div>
 
         <!-- BOTTOM NAVIGATION BAR -->
-        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center h-16 shadow-lg z-10 hidden">
+        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-lg z-10 hidden">
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
-                <i class="fa-solid fa-house text-xl"></i>
-                <span class="text-xs mt-1 font-medium">Home</span>
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] mt-1 font-semibold">Home</span>
             </button>
-            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-gray-400 hover:text-rose-600 transition">
-                <i class="fa-solid fa-layer-group text-xl"></i>
-                <span class="text-xs mt-1 font-medium">Categories</span>
+            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-zinc-400 hover:text-rose-600 transition">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+                <span class="text-[10px] mt-1 font-semibold">Categories</span>
             </button>
-            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-gray-400 hover:text-rose-600 transition relative">
-                <i class="fa-solid fa-cart-shopping text-xl"></i>
-                <span class="text-xs mt-1 font-medium">Cart</span>
-                <span id="cart-badge" class="absolute -top-1 right-2 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-zinc-400 hover:text-rose-600 transition relative">
+                <i class="fa-solid fa-cart-shopping text-lg"></i>
+                <span class="text-[10px] mt-1 font-semibold">Cart</span>
+                <span id="cart-badge" class="absolute -top-1 right-2 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden shadow-sm">0</span>
             </button>
         </nav>
 
     </div>
 
     <!-- PRODUCT IMAGE MODAL -->
-    <div id="image-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
-        <div class="bg-white rounded-2xl max-w-xs w-full p-4 relative text-center shadow-xl" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="absolute top-2 right-3 text-gray-400 hover:text-gray-600 text-sm">
+    <div id="image-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="closeImageModal()">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-5 relative text-center shadow-2xl border border-zinc-100" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute top-3 right-4 text-zinc-400 hover:text-zinc-600 text-sm w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="modal-img" src="" class="w-full h-56 object-cover rounded-xl mb-3 bg-gray-50 shadow-inner">
-            <h3 id="modal-title" class="text-xs font-bold text-gray-800 mb-1"></h3>
-            <p id="modal-id" class="text-[10px] text-gray-400 mb-2"></p>
+            <img id="modal-img" src="" class="w-full h-56 object-cover rounded-2xl mb-4 bg-zinc-50 shadow-inner">
+            <h3 id="modal-title" class="text-xs font-bold text-zinc-800 mb-1"></h3>
+            <p id="modal-id" class="text-[10px] text-zinc-400 mb-3 font-mono"></p>
             <span id="modal-price" class="text-rose-600 font-extrabold text-sm block"></span>
         </div>
     </div>
@@ -119,10 +119,10 @@
                 const container = document.getElementById('main-content');
                 if (container && container.innerHTML.includes('animate-spin')) {
                     container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-amber-600 text-xs p-6 space-y-2">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-amber-600 text-xs p-6 space-y-3">
                             <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                             <p class="font-bold">Connection is taking longer than expected.</p>
-                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-xl font-semibold shadow">Retry Connection</button>
+                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry Connection</button>
                         </div>
                     `;
                 }
@@ -150,7 +150,7 @@
                             <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
                                 <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
                                 <p>Error loading sheet data: ${data.message}</p>
-                                <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-xl font-semibold shadow">Retry</button>
+                                <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
                             </div>
                         `;
                     }
@@ -162,7 +162,7 @@
                         <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
                             <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
                             <p>Failed to connect to Google Sheet. Please check your connection or URL.</p>
-                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-xl font-semibold shadow">Retry</button>
+                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
                         </div>
                     `;
                 });
@@ -200,28 +200,28 @@
             container.innerHTML = `
                 <div class="flex flex-col justify-center h-full px-6 space-y-4">
                     <div class="text-center space-y-1 mb-1">
-                        <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-2 shadow-inner">
+                        <div class="w-16 h-16 bg-rose-100 rounded-3xl flex items-center justify-center text-rose-600 mx-auto mb-3 shadow-sm">
                             <i class="fa-solid ${isSignup ? 'fa-user-plus' : 'fa-lock'} text-xl"></i>
                         </div>
-                        <h2 class="text-sm font-bold text-gray-800 tracking-wider">${isSignup ? 'CREATE ACCOUNT' : 'MEMBER LOGIN'}</h2>
-                        <p class="text-[11px] text-gray-500">${isSignup ? 'Sign up to create your account' : 'Enter your mobile number and password'}</p>
+                        <h2 class="text-sm font-bold text-zinc-900 tracking-wider">${isSignup ? 'CREATE ACCOUNT' : 'MEMBER LOGIN'}</h2>
+                        <p class="text-[11px] text-zinc-500 font-medium">${isSignup ? 'Sign up to create your account' : 'Enter your mobile number and password'}</p>
                     </div>
-                    <div class="space-y-3 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="space-y-3.5 bg-white p-6 rounded-3xl shadow-sm border border-zinc-200/80">
                         ${isSignup ? `
                             <div>
-                                <label class="text-xs font-semibold text-gray-600">Full Name *</label>
-                                <input type="text" id="signup-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
+                                <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Full Name</label>
+                                <input type="text" id="signup-name" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Enter your name">
                             </div>
                         ` : ''}
                         <div>
-                            <label class="text-xs font-semibold text-gray-600">Mobile Number *</label>
-                            <input type="tel" id="auth-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter mobile number">
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Mobile Number</label>
+                            <input type="tel" id="auth-phone" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Enter mobile number">
                         </div>
                         <div>
-                            <label class="text-xs font-semibold text-gray-600">Password *</label>
-                            <input type="password" id="auth-password" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter password">
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Password</label>
+                            <input type="password" id="auth-password" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Enter password">
                         </div>
-                        <button onclick="${isSignup ? 'handleSignup()' : 'handleLogin()'}" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] mt-2 text-xs">
+                        <button onclick="${isSignup ? 'handleSignup()' : 'handleLogin()'}" class="w-full bg-rose-600 text-white py-3.5 rounded-2xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] mt-2 text-xs">
                             ${isSignup ? 'Sign Up' : 'Login to Store'}
                         </button>
                         <div class="text-center pt-2">
@@ -358,7 +358,7 @@
                 if (t === tab) {
                     btn.className = "flex flex-col items-center text-rose-600 transition";
                 } else {
-                    btn.className = "flex flex-col items-center text-gray-400 hover:text-rose-600 transition";
+                    btn.className = "flex flex-col items-center text-zinc-400 hover:text-rose-600 transition";
                 }
             });
 
@@ -424,38 +424,38 @@
                 container.innerHTML = `
                     <div class="space-y-4">
                         ${selectedSubcategoryFilter !== 'All' ? `
-                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-2.5 rounded-xl shadow-sm">
-                                <span class="text-xs font-semibold text-rose-800 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
+                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-3 rounded-2xl shadow-sm">
+                                <span class="text-xs font-semibold text-rose-900 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
                                 <button onclick="filterBySubcategory('All')" class="text-xs text-rose-600 font-bold hover:underline whitespace-nowrap ml-2 flex items-center">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Show All
                                 </button>
                             </div>
                         ` : ''}
 
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3.5">
                             ${shuffledHomeProducts.length === 0 ? `
-                                <div class="col-span-2 text-center py-16 text-gray-400">
-                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-gray-300"></i>
+                                <div class="col-span-2 text-center py-20 text-zinc-400">
+                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
                                     <p class="text-xs font-medium">No materials found.</p>
                                 </div>
                             ` : shuffledHomeProducts.map(p => {
                                 const qty = getProductQuantity(p.id);
                                 return `
-                                    <div class="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                         <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
-                                            <img src="${p.image}" class="w-full h-28 object-cover rounded-xl mb-2 bg-gray-50">
+                                            <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                        <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
-                                        <div class="flex justify-between items-center mt-2">
+                                        <h4 class="text-xs font-bold text-zinc-800 truncate">${p.name}</h4>
+                                        <span class="text-[10px] text-zinc-400 truncate font-mono">${p.id}</span>
+                                        <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             
-                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
-                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
-                                                <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
-                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                <span class="text-xs font-bold text-rose-900 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -470,10 +470,10 @@
                 if (!selectedCategory) {
                     container.innerHTML = `
                         <div class="space-y-3">
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                                 <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> All Categories
                             </h3>
-                            <div class="grid grid-cols-1 gap-2.5">
+                            <div class="grid grid-cols-1 gap-3">
                                 ${cachedCategories.map(cat => {
                                     const catProducts = cachedProducts.filter(p => p.category === cat.categoryName);
                                     let catImage = cat.image || '';
@@ -483,14 +483,14 @@
                                     }
 
                                     return `
-                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-gray-100 rounded-2xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-12 h-12 bg-rose-50 rounded-xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                            <div class="flex items-center space-x-3.5">
+                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${catImage ? `<img src="${catImage}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
-                                                <span class="font-semibold text-gray-800 text-xs">${cat.categoryName}</span>
+                                                <span class="font-bold text-zinc-800 text-xs">${cat.categoryName}</span>
                                             </div>
-                                            <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
+                                            <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
                                         </div>
                                     `;
                                 }).join('')}
@@ -507,10 +507,10 @@
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Categories</span>
                             </button>
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 truncate">
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 truncate">
                                 <i class="fa-solid fa-tags text-rose-600 mr-1.5"></i> ${selectedCategory}
                             </h3>
-                            <div class="grid grid-cols-1 gap-2.5">
+                            <div class="grid grid-cols-1 gap-3">
                                 ${subcategories.map(sub => {
                                     const subProducts = cachedProducts.filter(p => p.subcategory === sub);
                                     let subImage = '';
@@ -520,14 +520,14 @@
                                     }
 
                                     return `
-                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
-                                            <div class="flex items-center space-x-3">
-                                                <div class="w-12 h-12 bg-rose-50 rounded-xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                            <div class="flex items-center space-x-3.5">
+                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${subImage ? `<img src="${subImage}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-tag text-sm"></i>`}
                                                 </div>
-                                                <span class="font-semibold text-gray-800 text-xs">${sub}</span>
+                                                <span class="font-bold text-zinc-800 text-xs">${sub}</span>
                                             </div>
-                                            <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
+                                            <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
                                         </div>
                                     `;
                                 }).join('')}
@@ -539,38 +539,38 @@
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
-                        <div class="sticky top-0 bg-slate-50 pt-1 pb-3 z-10 border-b border-gray-100 mb-3 space-y-2">
+                        <div class="sticky top-0 bg-zinc-100/95 backdrop-blur-md pt-1 pb-3 z-10 border-b border-zinc-200 mb-3 space-y-2">
                             <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Subcategories</span>
                             </button>
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider truncate">
                                 <i class="fa-solid fa-box text-rose-600 mr-1.5"></i> ${selectedSubcategory}
                             </h3>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2 gap-3.5">
                             ${subcategoryProducts.length === 0 ? `
-                                <div class="col-span-2 text-center py-16 text-gray-400">
-                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-gray-300"></i>
+                                <div class="col-span-2 text-center py-20 text-zinc-400">
+                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
                                     <p class="text-xs font-medium">No products found in this subcategory.</p>
                                 </div>
                             ` : subcategoryProducts.map(p => {
                                 const qty = getProductQuantity(p.id);
                                 return `
-                                    <div class="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                         <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
-                                            <img src="${p.image}" class="w-full h-28 object-cover rounded-xl mb-2 bg-gray-50">
+                                            <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                        <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
-                                        <div class="flex justify-between items-center mt-2">
+                                        <h4 class="text-xs font-bold text-zinc-800 truncate">${p.name}</h4>
+                                        <span class="text-[10px] text-zinc-400 truncate font-mono">${p.id}</span>
+                                        <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
-                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
-                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
-                                                <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
-                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                <span class="text-xs font-bold text-rose-900 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -584,46 +584,46 @@
             } else if (currentTab === 'cart') {
                 if (cart.length === 0) {
                     container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-gray-400 space-y-3 pt-20">
-                            <div class="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center text-rose-600 mb-1">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20">
+                            <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
                                 <i class="fa-solid fa-cart-shopping text-3xl"></i>
                             </div>
-                            <p class="text-sm font-bold text-gray-700">Your cart is empty</p>
-                            <p class="text-xs text-gray-400 max-w-[200px]">Add items from the home screen to place your order.</p>
+                            <p class="text-sm font-bold text-zinc-800">Your cart is empty</p>
+                            <p class="text-xs text-zinc-400 max-w-[200px]">Add items from the home screen to place your order.</p>
                         </div>
                     `;
                 } else {
                     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
                         <div class="space-y-3 flex flex-col h-full justify-between pb-10">
-                            <div class="space-y-2 overflow-y-auto flex-1 pr-1">
+                            <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                                 ${cart.map(item => `
-                                    <div class="flex items-center justify-between bg-white border border-gray-100 p-3 rounded-2xl shadow-sm">
-                                        <div class="flex items-center space-x-3">
-                                            <img src="${item.image}" class="w-12 h-12 object-cover rounded-xl bg-gray-50">
+                                    <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
+                                        <div class="flex items-center space-x-3.5">
+                                            <img src="${item.image}" class="w-12 h-12 object-cover rounded-2xl bg-zinc-50 shadow-inner">
                                             <div>
-                                                <h4 class="text-xs font-bold text-gray-800">${item.name}</h4>
+                                                <h4 class="text-xs font-bold text-zinc-800">${item.name}</h4>
                                                 <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
-                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
-                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 flex items-center justify-center transition">
+                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
-                                            <span class="text-xs font-bold px-1.5 text-gray-800">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 flex items-center justify-center transition">
+                                            <span class="text-xs font-bold px-1.5 text-zinc-800">${item.quantity}</span>
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
                                     </div>
                                 `).join('')}
                             </div>
-                            <div class="bg-white border-t border-gray-100 pt-3">
-                                <div class="flex justify-between font-bold text-gray-800 mb-3 text-sm">
+                            <div class="bg-white border border-zinc-200/80 p-4 rounded-3xl shadow-sm">
+                                <div class="flex justify-between font-bold text-zinc-800 mb-3 text-xs">
                                     <span>Total Amount:</span>
                                     <span class="text-rose-600 text-base">₹${total}</span>
                                 </div>
-                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99]">
+                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3.5 rounded-2xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] text-xs">
                                     Proceed to Checkout
                                 </button>
                             </div>
@@ -636,31 +636,33 @@
         function showCheckoutForm() {
             const container = document.getElementById('main-content');
             container.innerHTML = `
-                <div class="space-y-3 pb-10">
-                    <h2 class="text-sm font-bold text-gray-800 mb-2">Customer & Delivery Details</h2>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">Full Name *</label>
-                        <input type="text" id="cust-name" value="${currentUser ? currentUser.name : ''}" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">Primary Phone Number *</label>
-                        <input type="tel" id="cust-phone" value="${currentUser ? currentUser.mobile : ''}" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="9840450113">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">Secondary Phone (Optional)</label>
-                        <input type="tel" id="cust-sec-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Alternative number">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">Delivery Address *</label>
-                        <textarea id="cust-address" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" rows="2" placeholder="House no, street, area"></textarea>
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-gray-600">Special Instructions / Notes</label>
-                        <input type="text" id="cust-desc" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-white focus:outline-rose-600 transition" placeholder="Any specific requests">
-                    </div>
-                    <div class="pt-2 flex space-x-2">
-                        <button onclick="switchTab('cart')" class="w-1/2 bg-gray-100 text-gray-700 py-3 rounded-xl text-xs font-semibold hover:bg-gray-200 transition">Back</button>
-                        <button onclick="submitOrderToSheet()" class="w-1/2 bg-green-600 text-white py-3 rounded-xl text-xs font-semibold shadow hover:bg-green-700 transition">Place Order</button>
+                <div class="space-y-3.5 pb-10">
+                    <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
+                    <div class="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
+                        <div>
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Full Name *</label>
+                            <input type="text" id="cust-name" value="${currentUser ? currentUser.name : ''}" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Primary Phone Number *</label>
+                            <input type="tel" id="cust-phone" value="${currentUser ? currentUser.mobile : ''}" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="9840450113">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Secondary Phone (Optional)</label>
+                            <input type="tel" id="cust-sec-phone" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Alternative number">
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Delivery Address *</label>
+                            <textarea id="cust-address" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" rows="2" placeholder="House no, street, area"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Special Instructions / Notes</label>
+                            <input type="text" id="cust-desc" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Any specific requests">
+                        </div>
+                        <div class="pt-2 flex space-x-2">
+                            <button onclick="switchTab('cart')" class="w-1/2 bg-zinc-100 text-zinc-700 py-3.5 rounded-2xl text-xs font-semibold hover:bg-zinc-200 transition">Back</button>
+                            <button onclick="submitOrderToSheet()" class="w-1/2 bg-emerald-600 text-white py-3.5 rounded-2xl text-xs font-semibold shadow hover:bg-emerald-700 transition">Place Order</button>
+                        </div>
                     </div>
                 </div>
             `;
