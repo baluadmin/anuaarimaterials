@@ -105,6 +105,7 @@
         let cart = []; 
         let selectedSubcategoryFilter = 'All';
         let selectedCategory = null;
+        let selectedSubcategory = null;
         let searchQuery = '';
         
         let cachedProducts = [];
@@ -191,15 +192,21 @@
             renderContent();
         }
 
+        function selectCategory(catName) {
+            selectedCategory = catName;
+            selectedSubcategory = null;
+            renderContent();
+        }
+
+        function selectSubcategory(subcatName) {
+            selectedSubcategory = subcatName;
+            renderContent();
+        }
+
         function filterBySubcategory(subcat) {
             selectedSubcategoryFilter = subcat;
             prepareHomeProducts();
             switchTab('home');
-        }
-
-        function selectCategory(catName) {
-            selectedCategory = catName;
-            renderContent();
         }
 
         function getProductQuantity(productId) {
@@ -281,6 +288,7 @@
                 `;
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
+                    // Level 1: Categories List
                     container.innerHTML = `
                         <div class="space-y-3">
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -301,7 +309,8 @@
                             </div>
                         </div>
                     `;
-                } else {
+                } else if (!selectedSubcategory) {
+                    // Level 2: Subcategories List
                     const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
@@ -316,7 +325,7 @@
                             </h3>
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${subcategories.map(sub => `
-                                    <div onclick="filterBySubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                    <div onclick="selectSubcategory('${sub}')" class="bg-white border border-gray-100 rounded-2xl p-4 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                         <div class="flex items-center space-x-3">
                                             <div class="w-9 h-9 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition">
                                                 <i class="fa-solid fa-tag text-sm"></i>
@@ -326,6 +335,52 @@
                                         <i class="fa-solid fa-chevron-right text-xs text-gray-400 group-hover:text-rose-600 transition"></i>
                                     </div>
                                 `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Level 3: Products inside Subcategory
+                    const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
+
+                    container.innerHTML = `
+                        <div class="space-y-3">
+                            <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                <span>Back to Subcategories</span>
+                            </button>
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 truncate">
+                                <i class="fa-solid fa-box text-rose-600 mr-1.5"></i> ${selectedSubcategory}
+                            </h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${subcategoryProducts.length === 0 ? `
+                                    <div class="col-span-2 text-center py-16 text-gray-400">
+                                        <i class="fa-solid fa-box-open text-4xl mb-2 text-gray-300"></i>
+                                        <p class="text-xs font-medium">No products found in this subcategory.</p>
+                                    </div>
+                                ` : subcategoryProducts.map(p => {
+                                    const qty = getProductQuantity(p.id);
+                                    return `
+                                        <div class="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                            <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
+                                                <img src="${p.image}" class="w-full h-28 object-cover rounded-xl mb-2 bg-gray-50">
+                                            </div>
+                                            <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
+                                            <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
+                                            <div class="flex justify-between items-center mt-2">
+                                                <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                                <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
+                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                        <i class="fa-solid fa-minus text-[10px]"></i>
+                                                    </button>
+                                                    <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
+                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                        <i class="fa-solid fa-plus text-[10px]"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     `;
