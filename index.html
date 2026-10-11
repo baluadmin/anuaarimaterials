@@ -137,7 +137,6 @@
                         cachedCategories = data.categories || [];
                         cachedLogins = data.logins || [];
                         
-                        // Check if user session already exists in localStorage
                         const savedUser = localStorage.getItem('anu_aari_user');
                         if (savedUser) {
                             currentUser = JSON.parse(savedUser);
@@ -168,7 +167,7 @@
                 });
         }
 
-        function renderLoginScreen() {
+        function renderLoginScreen(isSignup = false) {
             document.getElementById('app-header').classList.add('hidden');
             document.getElementById('search-container').classList.add('hidden');
             document.getElementById('bottom-nav').classList.add('hidden');
@@ -176,40 +175,50 @@
             const container = document.getElementById('main-content');
             container.innerHTML = `
                 <div class="flex flex-col justify-center h-full px-6 space-y-4">
-                    <div class="text-center space-y-1 mb-2">
-                        <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-3 shadow-inner">
-                            <i class="fa-solid fa-lock text-xl"></i>
+                    <div class="text-center space-y-1 mb-1">
+                        <div class="w-14 h-14 bg-rose-100 rounded-full flex items-center justify-center text-rose-600 mx-auto mb-2 shadow-inner">
+                            <i class="fa-solid ${isSignup ? 'fa-user-plus' : 'fa-lock'} text-xl"></i>
                         </div>
-                        <h2 class="text-sm font-bold text-gray-800 tracking-wider">MEMBER LOGIN</h2>
-                        <p class="text-[11px] text-gray-500">Enter your mobile number and password to access</p>
+                        <h2 class="text-sm font-bold text-gray-800 tracking-wider">${isSignup ? 'CREATE ACCOUNT' : 'MEMBER LOGIN'}</h2>
+                        <p class="text-[11px] text-gray-500">${isSignup ? 'Sign up to create your account' : 'Enter your mobile number and password'}</p>
                     </div>
                     <div class="space-y-3 bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                        ${isSignup ? `
+                            <div>
+                                <label class="text-xs font-semibold text-gray-600">Full Name *</label>
+                                <input type="text" id="signup-name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter your name">
+                            </div>
+                        ` : ''}
                         <div>
                             <label class="text-xs font-semibold text-gray-600">Mobile Number *</label>
-                            <input type="tel" id="login-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter mobile number">
+                            <input type="tel" id="auth-phone" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter mobile number">
                         </div>
                         <div>
                             <label class="text-xs font-semibold text-gray-600">Password *</label>
-                            <input type="password" id="login-password" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter password">
+                            <input type="password" id="auth-password" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs mt-1 bg-gray-50 focus:bg-white focus:outline-rose-600 transition" placeholder="Enter password">
                         </div>
-                        <button onclick="handleLogin()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] mt-2 text-xs">
-                            Login to Store
+                        <button onclick="${isSignup ? 'handleSignup()' : 'handleLogin()'}" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] mt-2 text-xs">
+                            ${isSignup ? 'Sign Up' : 'Login to Store'}
                         </button>
+                        <div class="text-center pt-2">
+                            <button onclick="renderLoginScreen(${!isSignup})" class="text-[11px] text-rose-600 font-semibold hover:underline">
+                                ${isSignup ? 'Already have an account? Login' : "Don't have an account? Sign Up"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
         function handleLogin() {
-            const phoneInput = document.getElementById('login-phone').value.trim();
-            const passInput = document.getElementById('login-password').value.trim();
+            const phoneInput = document.getElementById('auth-phone').value.trim();
+            const passInput = document.getElementById('auth-password').value.trim();
 
             if (!phoneInput || !passInput) {
                 showToast("Please fill in both fields.");
                 return;
             }
 
-            // Verify against cached logins from sheet
             const matchedUser = cachedLogins.find(u => String(u.mobile) === phoneInput && String(u.password) === passInput);
 
             if (matchedUser) {
@@ -220,6 +229,52 @@
             } else {
                 showToast("Invalid mobile number or password.");
             }
+        }
+
+        function handleSignup() {
+            const nameInput = document.getElementById('signup-name').value.trim();
+            const phoneInput = document.getElementById('auth-phone').value.trim();
+            const passInput = document.getElementById('auth-password').value.trim();
+
+            if (!nameInput || !phoneInput || !passInput) {
+                showToast("Please fill in all fields.");
+                return;
+            }
+
+            // Check if mobile already exists in cached logins
+            const existingUser = cachedLogins.find(u => String(u.mobile) === phoneInput);
+            if (existingUser) {
+                showToast("Mobile number already registered. Please login.");
+                return;
+            }
+
+            const newUser = {
+                Type: "Register",
+                Name: nameInput,
+                Mobile: phoneInput,
+                Password: passInput
+            };
+
+            showToast("Creating account...");
+
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newUser)
+            }).then(() => {
+                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
+                cachedLogins.push(currentUser);
+                localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
+                showToast("Account created successfully!");
+                showAppUI();
+            }).catch(err => {
+                console.error("Error signing up:", err);
+                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
+                localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
+                showToast("Account created successfully!");
+                showAppUI();
+            });
         }
 
         function showAppUI() {
@@ -235,7 +290,7 @@
             currentUser = null;
             cart = [];
             updateCartBadge();
-            renderLoginScreen();
+            renderLoginScreen(false);
             showToast("Logged out successfully");
         }
 
@@ -386,7 +441,6 @@
                 `;
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
-                    // Level 1: Categories List with Shuffled Product Images
                     container.innerHTML = `
                         <div class="space-y-3">
                             <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -417,7 +471,6 @@
                         </div>
                     `;
                 } else if (!selectedSubcategory) {
-                    // Level 2: Subcategories List with Shuffled Product Images
                     const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
@@ -455,7 +508,6 @@
                         </div>
                     `;
                 } else {
-                    // Level 3: Products inside Subcategory
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
