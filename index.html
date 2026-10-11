@@ -142,7 +142,7 @@
                             currentUser = JSON.parse(savedUser);
                             showAppUI();
                         } else {
-                            renderLoginScreen();
+                            renderLoginScreen(false);
                         }
                     } else {
                         document.getElementById('main-content').innerHTML = `
@@ -241,7 +241,6 @@
                 return;
             }
 
-            // Check if mobile already exists in cached logins
             const existingUser = cachedLogins.find(u => String(u.mobile) === phoneInput);
             if (existingUser) {
                 showToast("Mobile number already registered. Please login.");
@@ -271,6 +270,7 @@
             }).catch(err => {
                 console.error("Error signing up:", err);
                 currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
+                cachedLogins.push(currentUser);
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 showToast("Account created successfully!");
                 showAppUI();
@@ -508,48 +508,49 @@
                         </div>
                     `;
                 } else {
+                    // Level 3: Products inside Subcategory with Sticky Header Bar
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
-                        <div class="space-y-3">
-                            <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                        <div class="sticky top-0 bg-slate-50 pt-1 pb-3 z-10 border-b border-gray-100 mb-3 space-y-2">
+                            <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Subcategories</span>
                             </button>
-                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 truncate">
+                            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider truncate">
                                 <i class="fa-solid fa-box text-rose-600 mr-1.5"></i> ${selectedSubcategory}
                             </h3>
-                            <div class="grid grid-cols-2 gap-3">
-                                ${subcategoryProducts.length === 0 ? `
-                                    <div class="col-span-2 text-center py-16 text-gray-400">
-                                        <i class="fa-solid fa-box-open text-4xl mb-2 text-gray-300"></i>
-                                        <p class="text-xs font-medium">No products found in this subcategory.</p>
-                                    </div>
-                                ` : subcategoryProducts.map(p => {
-                                    const qty = getProductQuantity(p.id);
-                                    return `
-                                        <div class="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                            <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
-                                                <img src="${p.image}" class="w-full h-28 object-cover rounded-xl mb-2 bg-gray-50">
-                                            </div>
-                                            <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
-                                            <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
-                                            <div class="flex justify-between items-center mt-2">
-                                                <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
-                                                <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
-                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
-                                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                                    </button>
-                                                    <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
-                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
-                                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    </button>
-                                                </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            ${subcategoryProducts.length === 0 ? `
+                                <div class="col-span-2 text-center py-16 text-gray-400">
+                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-gray-300"></i>
+                                    <p class="text-xs font-medium">No products found in this subcategory.</p>
+                                </div>
+                            ` : subcategoryProducts.map(p => {
+                                const qty = getProductQuantity(p.id);
+                                return `
+                                    <div class="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                        <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
+                                            <img src="${p.image}" class="w-full h-28 object-cover rounded-xl mb-2 bg-gray-50">
+                                        </div>
+                                        <h4 class="text-xs font-bold text-gray-800 truncate">${p.name}</h4>
+                                        <span class="text-[10px] text-gray-400 truncate">${p.id}</span>
+                                        <div class="flex justify-between items-center mt-2">
+                                            <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                    <i class="fa-solid fa-minus text-[10px]"></i>
+                                                </button>
+                                                <span class="text-xs font-bold text-rose-800 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                    `;
-                                }).join('')}
-                            </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     `;
                 }
