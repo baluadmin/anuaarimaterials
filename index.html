@@ -99,7 +99,9 @@
 
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
+        const BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
+        // Cache-busting query parameter ensuring users always get fresh data on every deployment
+        const GOOGLE_SCRIPT_URL = `${BASE_SCRIPT_URL}?v=${Date.now()}`;
 
         let currentTab = 'home';
         let cart = []; 
@@ -281,7 +283,7 @@
 
             showToast("Creating account...");
 
-            fetch(GOOGLE_SCRIPT_URL, {
+            fetch(BASE_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
@@ -702,13 +704,13 @@
 
             showToast("Submitting order...");
 
-            fetch(GOOGLE_SCRIPT_URL, {
+            fetch(BASE_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderPayload)
             }).then(() => {
-                return fetch(GOOGLE_SCRIPT_URL, {
+                return fetch(BASE_SCRIPT_URL, {
                     method: "POST",
                     mode: "no-cors",
                     headers: { "Content-Type": "application/json" },
