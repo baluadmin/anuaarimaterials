@@ -100,7 +100,6 @@
     <!-- JAVASCRIPT APP LOGIC -->
     <script>
         const BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyftApEC3eQJvJPF0tCSX7eFwAG52IinpEhQtlxhmVaOtpbc1J83zJZIhs9XRDRCezCZA/exec";
-        // Cache-busting query parameter ensuring users always get fresh data on every deployment
         const GOOGLE_SCRIPT_URL = `${BASE_SCRIPT_URL}?v=${Date.now()}`;
 
         let currentTab = 'home';
@@ -115,6 +114,11 @@
         let cachedLogins = [];
         let shuffledHomeProducts = [];
         let currentUser = null;
+
+        // Helper function to resolve the display name of a product
+        function getDisplayName(product) {
+            return product.product || product.productName || product.name || product.subcategory || product.id;
+        }
 
         function initApp() {
             const timeoutId = setTimeout(() => {
@@ -341,7 +345,12 @@
 
             if (searchQuery.trim() !== '') {
                 const q = searchQuery.toLowerCase();
-                filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q));
+                filtered = filtered.filter(p => {
+                    const name = getDisplayName(p).toLowerCase();
+                    const id = (p.id || '').toLowerCase();
+                    const subcat = (p.subcategory || '').toLowerCase();
+                    return name.includes(q) || id.includes(q) || subcat.includes(q);
+                });
             }
 
             shuffledHomeProducts = shuffleArray(filtered);
@@ -442,13 +451,16 @@
                                 </div>
                             ` : shuffledHomeProducts.map(p => {
                                 const qty = getProductQuantity(p.id);
+                                const displayName = getDisplayName(p);
                                 return `
                                     <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                        <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
+                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
                                             <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-zinc-800 truncate">${p.name}</h4>
-                                        <span class="text-[10px] text-zinc-400 truncate font-mono">${p.id}</span>
+                                        <h4 class="text-xs font-bold text-zinc-800 truncate" title="${displayName}">${displayName}</h4>
+                                        <div class="flex items-center space-x-1 text-[10px] text-zinc-400 truncate font-mono">
+                                            <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                        </div>
                                         <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             
@@ -537,7 +549,6 @@
                         </div>
                     `;
                 } else {
-                    // Level 3: Products inside Subcategory with Sticky Header Bar
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
@@ -558,13 +569,16 @@
                                 </div>
                             ` : subcategoryProducts.map(p => {
                                 const qty = getProductQuantity(p.id);
+                                const displayName = getDisplayName(p);
                                 return `
                                     <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                        <div onclick="openImageModal('${p.name}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
+                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${p.image}')" class="cursor-pointer">
                                             <img src="${p.image}" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-zinc-800 truncate">${p.name}</h4>
-                                        <span class="text-[10px] text-zinc-400 truncate font-mono">${p.id}</span>
+                                        <h4 class="text-xs font-bold text-zinc-800 truncate" title="${displayName}">${displayName}</h4>
+                                        <div class="flex items-center space-x-1 text-[10px] text-zinc-400 truncate font-mono">
+                                            <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                        </div>
                                         <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
@@ -599,12 +613,14 @@
                     container.innerHTML = `
                         <div class="space-y-3 flex flex-col h-full justify-between pb-10">
                             <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
-                                ${cart.map(item => `
+                                ${cart.map(item => {
+                                    const displayName = getDisplayName(item);
+                                    return `
                                     <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
                                         <div class="flex items-center space-x-3.5">
                                             <img src="${item.image}" class="w-12 h-12 object-cover rounded-2xl bg-zinc-50 shadow-inner">
                                             <div>
-                                                <h4 class="text-xs font-bold text-zinc-800">${item.name}</h4>
+                                                <h4 class="text-xs font-bold text-zinc-800">${displayName}</h4>
                                                 <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
@@ -618,7 +634,8 @@
                                             </button>
                                         </div>
                                     </div>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </div>
                             <div class="bg-white border border-zinc-200/80 p-4 rounded-3xl shadow-sm">
                                 <div class="flex justify-between font-bold text-zinc-800 mb-3 text-xs">
@@ -682,7 +699,7 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${item.name} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
@@ -747,7 +764,7 @@
             saveUserCart();
             updateCartBadge();
             renderContent();
-            showToast(`Added ${product.name} to cart`);
+            showToast(`Added ${getDisplayName(product)} to cart`);
         }
 
         function decreaseQuantity(productId) {
