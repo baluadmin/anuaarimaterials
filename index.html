@@ -91,9 +91,9 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
             <img id="modal-img" src="" class="w-full h-56 object-cover rounded-2xl mb-4 bg-zinc-50 shadow-inner" onerror="this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';">
-            <h3 id="modal-title" class="text-xs font-bold text-zinc-800 mb-1 leading-snug"></h3>
-            <p id="modal-id" class="text-[10px] text-zinc-400 mb-3 font-mono"></p>
-            <span id="modal-price" class="text-rose-600 font-extrabold text-sm block"></span>
+            <h3 id="modal-title" class="text-xs font-bold text-zinc-800 mb-1 leading-snug text-center"></h3>
+            <p id="modal-id" class="text-[10px] text-zinc-400 mb-3 font-mono text-center"></p>
+            <span id="modal-price" class="text-rose-600 font-extrabold text-sm block text-center"></span>
         </div>
     </div>
 
@@ -472,9 +472,11 @@
                                         <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
                                             <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words" title="${displayName}">${displayName}</h4>
-                                        <div class="flex items-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1">
-                                            <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words text-center" title="${displayName}">${displayName}</h4>
+                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                                <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                            </div>
                                         </div>
                                         <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
@@ -593,9 +595,11 @@
                                         <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
                                             <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words" title="${displayName}">${displayName}</h4>
-                                        <div class="flex items-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1">
-                                            <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words text-center" title="${displayName}">${displayName}</h4>
+                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                                <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                            </div>
                                         </div>
                                         <div class="flex justify-between items-center mt-2.5">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
@@ -815,6 +819,3 @@
     </script>
 </body>
 </html>
-```<FollowUp>
-Would you also like to adjust the font size slightly or increase the card height so longer three-line names fit without truncating?
-</FollowUp>
