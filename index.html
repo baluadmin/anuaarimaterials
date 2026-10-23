@@ -105,7 +105,7 @@
             <button onclick="closeImageModal()" class="absolute top-3 right-4 text-zinc-400 hover:text-zinc-600 text-sm w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="modal-img" src="" class="w-full h-56 object-cover rounded-2xl mb-4 bg-zinc-50 shadow-inner" onerror="this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';">
+            <img id="modal-img" src="" class="w-full h-56 object-contain rounded-2xl mb-4 bg-white shadow-inner" onerror="this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';">
             <h3 id="modal-title" class="text-xs font-bold text-zinc-800 mb-1 leading-snug text-center"></h3>
             <p id="modal-id" class="text-[10px] text-zinc-400 mb-3 font-mono text-center"></p>
             <span id="modal-price" class="text-rose-600 font-extrabold text-sm block text-center"></span>
@@ -422,7 +422,7 @@
                                 return `
                                     <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                         <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-white shadow-inner">
                                         </div>
                                         <div class="flex flex-col items-center justify-center text-center px-1">
                                             <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
@@ -483,7 +483,7 @@
                                         <div onclick="selectCategory('${catName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
                                                 <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
-                                                    ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-folder-open"></i>`}
+                                                    ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-contain bg-white">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-800 text-xs">${catName}</span>
                                             </div>
@@ -514,7 +514,7 @@
                                         <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
                                                 <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
-                                                    ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Subcategory';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-tag text-sm"></i>`}
+                                                    ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Subcategory';" class="w-full h-full object-contain bg-white">` : `<i class="fa-solid fa-tag text-sm"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-800 text-xs">${sub}</span>
                                             </div>
@@ -546,7 +546,7 @@
                                     return `
                                         <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                             <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
+                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-white shadow-inner">
                                             </div>
                                             <div class="flex flex-col items-center justify-center text-center px-1">
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
@@ -597,7 +597,7 @@
                                     return `
                                     <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
                                         <div class="flex items-center space-x-3.5">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-12 h-12 object-cover rounded-2xl bg-zinc-50 shadow-inner">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-12 h-12 object-contain rounded-2xl bg-white shadow-inner">
                                             <div>
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug">${displayName}</h4>
                                                 <span class="text-rose-600 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
