@@ -47,7 +47,7 @@
         </div>
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
-        <main id="main-content" class="flex-1 overflow-y-auto p-3 bg-zinc-100/70">
+        <main id="main-content" class="flex-1 overflow-y-auto p-3 pt-2 bg-zinc-100/70">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
                 <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
@@ -448,9 +448,9 @@
 
             if (currentTab === 'home') {
                 container.innerHTML = `
-                    <div class="space-y-3 pb-4">
+                    <div class="space-y-3 pb-2">
                         ${selectedSubcategoryFilter !== 'All' ? `
-                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-3 rounded-2xl shadow-sm">
+                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-2.5 rounded-2xl shadow-sm mb-2">
                                 <span class="text-xs font-semibold text-rose-900 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
                                 <button onclick="filterBySubcategory('All')" class="text-xs text-rose-600 font-bold hover:underline whitespace-nowrap ml-2 flex items-center">
                                     <i class="fa-solid fa-arrow-left mr-1"></i> Show All
@@ -458,8 +458,8 @@
                             </div>
                         ` : ''}
 
-                        <!-- Single column layout: one full-width product card per row -->
-                        <div class="grid grid-cols-1 gap-3.5">
+                        <!-- Single column full-width layout -->
+                        <div class="grid grid-cols-1 gap-3">
                             ${shuffledHomeProducts.length === 0 ? `
                                 <div class="text-center py-20 text-zinc-400">
                                     <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
@@ -470,17 +470,17 @@
                                 const displayName = getDisplayName(p);
                                 const imgSrc = resolveImageUrl(p.image);
                                 return `
-                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                         <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-48 object-cover rounded-2xl mb-3 bg-zinc-50 shadow-inner">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <div class="flex flex-col items-center justify-center text-center px-2">
+                                        <div class="flex flex-col items-center justify-center text-center px-1">
                                             <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
                                                 <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
                                             </div>
                                         </div>
-                                        <div class="flex justify-between items-center mt-3 pt-2 border-t border-zinc-100">
+                                        <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
                                             <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             
                                             <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
@@ -502,11 +502,11 @@
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
                     container.innerHTML = `
-                        <div class="space-y-3 pb-4">
+                        <div class="space-y-3 pb-2">
                             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                                 <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> All Categories
                             </h3>
-                            <div class="grid grid-cols-1 gap-3">
+                            <div class="grid grid-cols-1 gap-2.5">
                                 ${cachedCategories.map(cat => {
                                     const catProducts = cachedProducts.filter(p => p.category === cat.categoryName);
                                     let catImage = cat.image || '';
@@ -517,9 +517,9 @@
                                     const catImgSrc = resolveImageUrl(catImage);
 
                                     return `
-                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
-                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-800 text-xs">${cat.categoryName}</span>
@@ -536,7 +536,7 @@
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-4">
+                        <div class="space-y-3 pb-2">
                             <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Categories</span>
@@ -544,7 +544,7 @@
                             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 truncate">
                                 <i class="fa-solid fa-tags text-rose-600 mr-1.5"></i> ${selectedCategory}
                             </h3>
-                            <div class="grid grid-cols-1 gap-3">
+                            <div class="grid grid-cols-1 gap-2.5">
                                 ${subcategories.map(sub => {
                                     const subProducts = cachedProducts.filter(p => p.subcategory === sub);
                                     let subImage = '';
@@ -555,9 +555,9 @@
                                     const subImgSrc = resolveImageUrl(subImage);
 
                                     return `
-                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
-                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Subcategory';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-tag text-sm"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-800 text-xs">${sub}</span>
@@ -573,8 +573,8 @@
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-4">
-                            <div class="sticky top-0 bg-zinc-100/95 backdrop-blur-md pt-1 pb-3 z-10 border-b border-zinc-200 mb-3 space-y-2">
+                        <div class="space-y-3 pb-2">
+                            <div class="bg-zinc-100/95 backdrop-blur-md pt-1 pb-2 z-10 border-b border-zinc-200 mb-2 space-y-1">
                                 <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline">
                                     <i class="fa-solid fa-arrow-left"></i>
                                     <span>Back to Subcategories</span>
@@ -583,8 +583,7 @@
                                     <i class="fa-solid fa-box text-rose-600 mr-1.5"></i> ${selectedSubcategory}
                                 </h3>
                             </div>
-                            <!-- Single column layout for subcategory products -->
-                            <div class="grid grid-cols-1 gap-3.5">
+                            <div class="grid grid-cols-1 gap-3">
                                 ${subcategoryProducts.length === 0 ? `
                                     <div class="text-center py-20 text-zinc-400">
                                         <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
@@ -595,17 +594,17 @@
                                     const displayName = getDisplayName(p);
                                     const imgSrc = resolveImageUrl(p.image);
                                     return `
-                                        <div class="bg-white border border-zinc-200/80 rounded-3xl p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                        <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
                                             <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-48 object-cover rounded-2xl mb-3 bg-zinc-50 shadow-inner">
+                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                             </div>
-                                            <div class="flex flex-col items-center justify-center text-center px-2">
+                                            <div class="flex flex-col items-center justify-center text-center px-1">
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                                <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                                <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
                                                     <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
                                                 </div>
                                             </div>
-                                            <div class="flex justify-between items-center mt-3 pt-2 border-t border-zinc-100">
+                                            <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
                                                 <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                                 <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
                                                     <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
@@ -627,7 +626,7 @@
             } else if (currentTab === 'cart') {
                 if (cart.length === 0) {
                     container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-4">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-2">
                             <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
                                 <i class="fa-solid fa-cart-shopping text-3xl"></i>
                             </div>
@@ -638,7 +637,7 @@
                 } else {
                     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
-                        <div class="space-y-3 flex flex-col h-full justify-between pb-4">
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-2">
                             <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                                 ${cart.map(item => {
                                     const displayName = getDisplayName(item);
@@ -683,7 +682,7 @@
         function showCheckoutForm() {
             const container = document.getElementById('main-content');
             container.innerHTML = `
-                <div class="space-y-3.5 pb-4">
+                <div class="space-y-3 pb-2">
                     <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
                     <div class="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
                         <div>
