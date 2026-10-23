@@ -22,7 +22,7 @@
     <!-- Mobile Frame Container -->
     <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col justify-between relative overflow-hidden border border-zinc-800">
 
-        <!-- TOP HEADER (Dynamic Title & Navigation) -->
+        <!-- TOP HEADER -->
         <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3 flex justify-between items-center shadow-md z-30 shrink-0 hidden">
             <div class="flex items-center space-x-2.5 overflow-hidden">
                 <button id="header-back-btn" onclick="handleHeaderBack()" class="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition hidden shrink-0">
@@ -41,7 +41,7 @@
             </button>
         </header>
 
-        <!-- SEARCH BAR (Visible on Home Tab) -->
+        <!-- SEARCH BAR -->
         <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3 pb-3 pt-0.5 z-30 shrink-0 hidden shadow-md">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
@@ -49,6 +49,15 @@
                 </span>
                 <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-2 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
             </div>
+        </div>
+
+        <!-- STABLE SUB-HEADER BAR (Permanently pinned right below header when in subcategories) -->
+        <div id="subheader-container" class="bg-zinc-100 border-b border-zinc-200 px-3 py-2 z-20 shrink-0 hidden flex items-center justify-between shadow-sm">
+            <button onclick="handleHeaderBack()" class="text-xs text-rose-600 font-bold flex items-center space-x-1 hover:underline">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span id="subheader-back-text">Back</span>
+            </button>
+            <span id="subheader-title" class="text-xs font-bold text-zinc-700 uppercase truncate ml-2"></span>
         </div>
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
@@ -220,6 +229,7 @@
         function renderLoginScreen(isSignup = false) {
             document.getElementById('app-header').classList.add('hidden');
             document.getElementById('search-container').classList.add('hidden');
+            document.getElementById('subheader-container').classList.add('hidden');
             document.getElementById('bottom-nav').classList.add('hidden');
 
             const container = document.getElementById('main-content');
@@ -386,26 +396,35 @@
             const titleEl = document.getElementById('header-title');
             const phoneEl = document.getElementById('header-phone');
             const backBtn = document.getElementById('header-back-btn');
+            const subheaderContainer = document.getElementById('subheader-container');
+            const subheaderTitle = document.getElementById('subheader-title');
+            const subheaderBackText = document.getElementById('subheader-back-text');
 
             if (currentTab === 'home') {
                 titleEl.innerText = "ANU AARI MATERIALS";
                 phoneEl.classList.remove('hidden');
                 backBtn.classList.add('hidden');
+                subheaderContainer.classList.add('hidden');
             } else if (currentTab === 'cart') {
                 titleEl.innerText = "YOUR CART";
                 phoneEl.classList.add('hidden');
                 backBtn.classList.add('hidden');
+                subheaderContainer.classList.add('hidden');
             } else if (currentTab === 'categories') {
                 phoneEl.classList.add('hidden');
+                titleEl.innerText = "CATEGORIES";
+                backBtn.classList.add('hidden');
+
                 if (selectedSubcategory) {
-                    titleEl.innerText = selectedSubcategory;
-                    backBtn.classList.remove('hidden');
+                    subheaderContainer.classList.remove('hidden');
+                    subheaderTitle.innerText = selectedSubcategory;
+                    subheaderBackText.innerText = "Back to Subcategories";
                 } else if (selectedCategory) {
-                    titleEl.innerText = selectedCategory;
-                    backBtn.classList.remove('hidden');
+                    subheaderContainer.classList.remove('hidden');
+                    subheaderTitle.innerText = selectedCategory;
+                    subheaderBackText.innerText = "Back to Categories";
                 } else {
-                    titleEl.innerText = "ALL CATEGORIES";
-                    backBtn.classList.add('hidden');
+                    subheaderContainer.classList.add('hidden');
                 }
             }
         }
@@ -416,6 +435,7 @@
             } else if (selectedCategory) {
                 selectedCategory = null;
             }
+            updateHeaderTitle();
             renderContent();
         }
 
