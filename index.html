@@ -156,7 +156,18 @@
 
         function getDisplayName(product) {
             if (!product) return "Item";
-            return product.Product || product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || "Item";
+            const name = product.Product || product.product || product.PRODUCTS || product.Products || product.productName || product.name || product.Name || product.Item_Name;
+            if (name && String(name).trim() !== "") {
+                return String(name).trim();
+            }
+            for (let key in product) {
+                if (key.toLowerCase().includes('product') || key.toLowerCase().includes('name')) {
+                    if (product[key] && String(product[key]).trim() !== "") {
+                        return String(product[key]).trim();
+                    }
+                }
+            }
+            return "Item";
         }
 
         function getProductPrice(product) {
