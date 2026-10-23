@@ -130,7 +130,7 @@
 
         function resolveImageUrl(imageName) {
             if (!imageName || String(imageName).trim() === '') {
-                return 'https://placehold.co/400x300/18181b/fbbf24?text=ANU+AARI';
+                return '';
             }
             let clean = String(imageName).trim();
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
@@ -142,15 +142,14 @@
             return encodeURI(clean);
         }
 
-        // Fixed to ensure a unique fallback ID using product name if ID columns are missing
-        function getProductId(product) {
-            if (!product) return "";
+        function getProductId(product, index = 0) {
+            if (!product) return "item_" + index;
             const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
             if (String(rawId).trim() !== "") {
                 return String(rawId).trim();
             }
-            // Fallback unique key using product name / display name if ID field is empty
-            return String(getDisplayName(product)).trim();
+            // Fallback unique key combining product name and array index to guarantee uniqueness
+            return String(getDisplayName(product) + "_" + index).trim();
         }
 
         function getDisplayName(product) {
@@ -386,7 +385,7 @@
         }
 
         function openImageModal(name, id, price, image) {
-            document.getElementById('modal-img').src = image;
+            document.getElementById('modal-img').src = image || 'https://placehold.co/400x300/18181b/fbbf24?text=ANU+AARI';
             document.getElementById('modal-title').innerText = name;
             document.getElementById('modal-id').innerText = id;
             document.getElementById('modal-price').innerText = `₹${price.toFixed(2)}`;
@@ -419,17 +418,24 @@
                                     <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-700"></i>
                                     <p class="text-xs font-medium">No materials found.</p>
                                 </div>
-                            ` : shuffledHomeProducts.map(p => {
-                                const id = getProductId(p);
+                            ` : shuffledHomeProducts.map((p, index) => {
+                                const id = getProductId(p, index);
                                 const qty = getProductQuantity(id);
                                 const displayName = getDisplayName(p);
                                 const price = getProductPrice(p);
                                 const subcat = getProductSubcategory(p);
                                 const imgSrc = resolveImageUrl(getProductImage(p));
+                                
                                 return `
                                     <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-500/50 transition">
                                         <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/18181b/fbbf24?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
+                                            ${imgSrc ? `
+                                                <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
+                                            ` : `
+                                                <div class="w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner">
+                                                    <i class="fa-solid fa-image text-3xl"></i>
+                                                </div>
+                                            `}
                                         </div>
                                         <div class="flex flex-col items-center justify-center text-center px-1">
                                             <h4 class="text-xs font-bold text-zinc-200 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
@@ -490,7 +496,7 @@
                                         <div onclick="selectCategory('${catName}')" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3 text-left shadow-sm hover:border-amber-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
                                                 <div class="w-11 h-11 bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden flex items-center justify-center text-amber-400 shadow-inner group-hover:scale-105 transition">
-                                                    ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/18181b/fbbf24?text=Category';" class="w-full h-full object-contain bg-zinc-950">` : `<i class="fa-solid fa-folder-open"></i>`}
+                                                    ${catImgSrc ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.parentNode.innerHTML='<i class=\'fa-solid fa-folder-open\'></i>'" class="w-full h-full object-contain bg-zinc-950">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-200 text-xs">${catName}</span>
                                             </div>
@@ -521,7 +527,7 @@
                                         <div onclick="selectSubcategory('${sub}')" class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3 text-left shadow-sm hover:border-amber-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
                                                 <div class="w-11 h-11 bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden flex items-center justify-center text-amber-400 shadow-inner group-hover:scale-105 transition">
-                                                    ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/18181b/fbbf24?text=Subcategory';" class="w-full h-full object-contain bg-zinc-950">` : `<i class="fa-solid fa-tag text-sm"></i>`}
+                                                    ${subImgSrc ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.parentNode.innerHTML='<i class=\'fa-solid fa-tag text-sm\'></i>'" class="w-full h-full object-contain bg-zinc-950">` : `<i class="fa-solid fa-tag text-sm"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-200 text-xs">${sub}</span>
                                             </div>
@@ -543,8 +549,8 @@
                                         <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-700"></i>
                                         <p class="text-xs font-medium">No products found in this subcategory.</p>
                                     </div>
-                                ` : subcategoryProducts.map(p => {
-                                    const id = getProductId(p);
+                                ` : subcategoryProducts.map((p, index) => {
+                                    const id = getProductId(p, index);
                                     const qty = getProductQuantity(id);
                                     const displayName = getDisplayName(p);
                                     const price = getProductPrice(p);
@@ -553,7 +559,13 @@
                                     return `
                                         <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-500/50 transition">
                                             <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/18181b/fbbf24?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
+                                                ${imgSrc ? `
+                                                    <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
+                                                ` : `
+                                                    <div class="w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner">
+                                                        <i class="fa-solid fa-image text-3xl"></i>
+                                                    </div>
+                                                `}
                                             </div>
                                             <div class="flex flex-col items-center justify-center text-center px-1">
                                                 <h4 class="text-xs font-bold text-zinc-200 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
@@ -604,7 +616,13 @@
                                     return `
                                     <div class="flex items-center justify-between bg-zinc-900 border border-zinc-800 p-3.5 rounded-3xl shadow-sm">
                                         <div class="flex items-center space-x-3.5">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/18181b/fbbf24?text=Item';" class="w-12 h-12 object-contain rounded-2xl bg-zinc-950 shadow-inner">
+                                            ${imgSrc ? `
+                                                <img src="${imgSrc}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-zinc-950 rounded-2xl flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image\'></i></div>'" class="w-12 h-12 object-contain rounded-2xl bg-zinc-950 shadow-inner">
+                                            ` : `
+                                                <div class="w-12 h-12 bg-zinc-950 rounded-2xl flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner">
+                                                    <i class="fa-solid fa-image"></i>
+                                                </div>
+                                            `}
                                             <div>
                                                 <h4 class="text-xs font-bold text-zinc-200 leading-snug">${displayName}</h4>
                                                 <span class="text-amber-400 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
@@ -725,7 +743,7 @@
         }
 
         function increaseQuantity(productId) {
-            const product = cachedProducts.find(p => getProductId(p) === productId);
+            const product = cachedProducts.find((p, index) => getProductId(p, index) === productId);
             if (!product) return;
             
             const existing = cart.find(i => getProductId(i) === productId);
