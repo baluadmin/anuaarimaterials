@@ -155,6 +155,7 @@
         }
 
         function getDisplayName(product) {
+            if (!product) return "Item";
             return product.Product || product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || "Item";
         }
 
@@ -197,6 +198,7 @@
                     if (data.status === "success") {
                         cachedProducts = data.products || [];
                         cachedCategories = data.categories || [];
+                        console.log("Cached Products Loaded:", cachedProducts);
                         loadCart();
                         prepareHomeProducts();
                         switchTab('home');
