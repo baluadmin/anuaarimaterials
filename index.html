@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <!-- STABLE SUB-HEADER BAR (Permanently pinned right below header when in subcategories) -->
+        <!-- STABLE SUB-HEADER BAR -->
         <div id="subheader-container" class="bg-zinc-100 border-b border-zinc-200 px-3 py-2 z-20 shrink-0 hidden flex items-center justify-between shadow-sm">
             <button onclick="handleHeaderBack()" class="text-xs text-rose-600 font-bold flex items-center space-x-1 hover:underline">
                 <i class="fa-solid fa-arrow-left"></i>
@@ -131,11 +131,11 @@
         let currentUser = null;
 
         function resolveImageUrl(imageName) {
-            if (!imageName || imageName.trim() === '') {
+            if (!imageName || String(imageName).trim() === '') {
                 return 'https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';
             }
             
-            let clean = imageName.trim();
+            let clean = String(imageName).trim();
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
                 return clean;
             }
@@ -145,8 +145,30 @@
             return encodeURI(clean);
         }
 
+        function getProductId(product) {
+            return product.id || product.Item_ID || product.item_id || product.ID || "";
+        }
+
         function getDisplayName(product) {
-            return product.product || product.productName || product.name || product.subcategory || product.id;
+            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.subcategory || product.Subcategory || getProductId(product) || "Item";
+        }
+
+        function getProductPrice(product) {
+            const raw = product.price !== undefined ? product.price : (product['Price (INR)'] !== undefined ? product['Price (INR)'] : (product.Price !== undefined ? product.Price : 0));
+            const num = parseFloat(raw);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function getProductSubcategory(product) {
+            return product.subcategory || product.Subcategory || product.SUBCATEGORY || "";
+        }
+
+        function getProductCategory(product) {
+            return product.category || product.Category || product.CATEGORY || "";
+        }
+
+        function getProductImage(product) {
+            return product.image || product.images || product.Images || product.IMAGE || "";
         }
 
         function initApp() {
@@ -279,12 +301,28 @@
                 return;
             }
 
-            const matchedUser = cachedLogins.find(u => String(u.mobile) === phoneInput && String(u.password) === passInput);
+            const matchedUser = cachedLogins.find(u => String(u.mobile || u.Mobile || u.PRIMARY_PHONE) === phoneInput && String(u.password || u.Password || u.PASSWORD) === passInput);
 
             if (matchedUser) {
-                currentUser = matchedUser;
+                currentUser = {
+                    name: matchedUser.name || matchedUser.Name || matchedUser.CUSTOMER_NAME || "User",
+                    mobile: phoneInput
+                };
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
+                
+                const loginPayload = {
+                    Type: "Login",
+                    Customer_Name: currentUser.name,
+                    Primary_Phone: currentUser.mobile
+                };
+                fetch(BASE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginPayload)
+                }).catch(err => console.error("Error logging login:", err));
+
                 showToast(`Welcome back, ${currentUser.name}!`);
                 showAppUI();
             } else {
@@ -302,7 +340,7 @@
                 return;
             }
 
-            const existingUser = cachedLogins.find(u => String(u.mobile) === phoneInput);
+            const existingUser = cachedLogins.find(u => String(u.mobile || u.Mobile) === phoneInput);
             if (existingUser) {
                 showToast("Mobile number already registered. Please login.");
                 return;
@@ -323,16 +361,16 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser)
             }).then(() => {
-                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
-                cachedLogins.push(currentUser);
+                currentUser = { name: nameInput, mobile: phoneInput };
+                cachedLogins.push({ name: nameInput, mobile: phoneInput, password: passInput });
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
                 showToast("Account created successfully!");
                 showAppUI();
             }).catch(err => {
                 console.error("Error signing up:", err);
-                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
-                cachedLogins.push(currentUser);
+                currentUser = { name: nameInput, mobile: phoneInput };
+                cachedLogins.push({ name: nameInput, mobile: phoneInput, password: passInput });
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
                 showToast("Account created successfully!");
@@ -370,15 +408,18 @@
             let filtered = cachedProducts;
             
             if (selectedSubcategoryFilter !== 'All') {
-                filtered = filtered.filter(p => p.subcategory === selectedSubcategoryFilter);
+                filtered = filtered.filter(p => {
+                    const sub = getProductSubcategory(p);
+                    return sub === selectedSubcategoryFilter;
+                });
             }
 
             if (searchQuery.trim() !== '') {
                 const q = searchQuery.toLowerCase();
                 filtered = filtered.filter(p => {
                     const name = getDisplayName(p).toLowerCase();
-                    const id = (p.id || '').toLowerCase();
-                    const subcat = (p.subcategory || '').toLowerCase();
+                    const id = String(getProductId(p)).toLowerCase();
+                    const subcat = String(getProductSubcategory(p)).toLowerCase();
                     return name.includes(q) || id.includes(q) || subcat.includes(q);
                 });
             }
@@ -484,7 +525,7 @@
         }
 
         function getProductQuantity(productId) {
-            const item = cart.find(i => i.id === productId);
+            const item = cart.find(i => getProductId(i) === productId);
             return item ? item.quantity : 0;
         }
 
@@ -534,29 +575,32 @@
                                     <p class="text-xs font-medium">No materials found.</p>
                                 </div>
                             ` : shuffledHomeProducts.map(p => {
-                                const qty = getProductQuantity(p.id);
+                                const id = getProductId(p);
+                                const qty = getProductQuantity(id);
                                 const displayName = getDisplayName(p);
-                                const imgSrc = resolveImageUrl(p.image);
+                                const price = getProductPrice(p);
+                                const subcat = getProductSubcategory(p);
+                                const imgSrc = resolveImageUrl(getProductImage(p));
                                 return `
                                     <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
+                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
                                             <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
                                         <div class="flex flex-col items-center justify-center text-center px-1">
                                             <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
                                             <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                                <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
                                             </div>
                                         </div>
                                         <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                            <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                            <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
                                             
                                             <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
                                                 <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -573,21 +617,22 @@
                         <div class="space-y-3 pb-2">
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${cachedCategories.map(cat => {
-                                    const catProducts = cachedProducts.filter(p => p.category === cat.categoryName);
+                                    const catName = cat.categoryName || cat.Category || "Category";
+                                    const catProducts = cachedProducts.filter(p => getProductCategory(p) === catName || getProductSubcategory(p) === catName);
                                     let catImage = cat.image || '';
                                     if (!catImage && catProducts.length > 0) {
                                         const shuffledCatProducts = shuffleArray(catProducts);
-                                        catImage = shuffledCatProducts[0].image;
+                                        catImage = getProductImage(shuffledCatProducts[0]);
                                     }
                                     const catImgSrc = resolveImageUrl(catImage);
 
                                     return `
-                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div onclick="selectCategory('${catName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
                                                 <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
-                                                <span class="font-bold text-zinc-800 text-xs">${cat.categoryName}</span>
+                                                <span class="font-bold text-zinc-800 text-xs">${catName}</span>
                                             </div>
                                             <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
                                         </div>
@@ -597,18 +642,18 @@
                         </div>
                     `;
                 } else if (!selectedSubcategory) {
-                    const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
-                    const subcategories = matchedCat ? matchedCat.subcategories : [];
+                    const matchedCat = cachedCategories.find(c => (c.categoryName || c.Category) === selectedCategory);
+                    const subcategories = matchedCat ? (matchedCat.subcategories || matchedCat.Subcategories || []) : [];
 
                     container.innerHTML = `
                         <div class="space-y-3 pb-2">
                             <div class="grid grid-cols-1 gap-2.5">
                                 ${subcategories.map(sub => {
-                                    const subProducts = cachedProducts.filter(p => p.subcategory === sub);
+                                    const subProducts = cachedProducts.filter(p => getProductSubcategory(p) === sub);
                                     let subImage = '';
                                     if (subProducts.length > 0) {
                                         const shuffledSubProducts = shuffleArray(subProducts);
-                                        subImage = shuffledSubProducts[0].image;
+                                        subImage = getProductImage(shuffledSubProducts[0]);
                                     }
                                     const subImgSrc = resolveImageUrl(subImage);
 
@@ -628,7 +673,7 @@
                         </div>
                     `;
                 } else {
-                    const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
+                    const subcategoryProducts = cachedProducts.filter(p => getProductSubcategory(p) === selectedSubcategory);
 
                     container.innerHTML = `
                         <div class="space-y-3 pb-2">
@@ -639,28 +684,31 @@
                                         <p class="text-xs font-medium">No products found in this subcategory.</p>
                                     </div>
                                 ` : subcategoryProducts.map(p => {
-                                    const qty = getProductQuantity(p.id);
+                                    const id = getProductId(p);
+                                    const qty = getProductQuantity(id);
                                     const displayName = getDisplayName(p);
-                                    const imgSrc = resolveImageUrl(p.image);
+                                    const price = getProductPrice(p);
+                                    const subcat = getProductSubcategory(p);
+                                    const imgSrc = resolveImageUrl(getProductImage(p));
                                     return `
                                         <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
+                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
                                                 <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                             </div>
                                             <div class="flex flex-col items-center justify-center text-center px-1">
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
                                                 <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                    <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
+                                                    <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
                                                 </div>
                                             </div>
                                             <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                                <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                                <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
                                                 <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                    <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                         <i class="fa-solid fa-minus text-[10px]"></i>
                                                     </button>
                                                     <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                    <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                         <i class="fa-solid fa-plus text-[10px]"></i>
                                                     </button>
                                                 </div>
@@ -684,28 +732,30 @@
                         </div>
                     `;
                 } else {
-                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+                    const total = cart.reduce((sum, item) => sum + (getProductPrice(item) * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
                         <div class="space-y-3 flex flex-col h-full justify-between pb-2">
                             <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                                 ${cart.map(item => {
                                     const displayName = getDisplayName(item);
-                                    const imgSrc = resolveImageUrl(item.image);
+                                    const price = getProductPrice(item);
+                                    const id = getProductId(item);
+                                    const imgSrc = resolveImageUrl(getProductImage(item));
                                     return `
                                     <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
                                         <div class="flex items-center space-x-3.5">
                                             <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-12 h-12 object-cover rounded-2xl bg-zinc-50 shadow-inner">
                                             <div>
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug">${displayName}</h4>
-                                                <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
+                                                <span class="text-rose-600 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="decreaseQuantity('${id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
                                             <span class="text-xs font-bold px-1.5 text-zinc-800">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="increaseQuantity('${id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
@@ -775,7 +825,7 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
@@ -828,10 +878,10 @@
         }
 
         function increaseQuantity(productId) {
-            const product = cachedProducts.find(p => p.id === productId);
+            const product = cachedProducts.find(p => getProductId(p) === productId);
             if (!product) return;
             
-            const existing = cart.find(i => i.id === productId);
+            const existing = cart.find(i => getProductId(i) === productId);
             if (existing) {
                 existing.quantity += 1;
             } else {
@@ -844,7 +894,7 @@
         }
 
         function decreaseQuantity(productId) {
-            const existingIndex = cart.findIndex(i => i.id === productId);
+            const existingIndex = cart.findIndex(i => getProductId(i) === productId);
             if (existingIndex > -1) {
                 cart[existingIndex].quantity -= 1;
                 if (cart[existingIndex].quantity <= 0) {
