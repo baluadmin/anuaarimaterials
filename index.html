@@ -11,18 +11,19 @@
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
     </style>
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="bg-slate-950 flex justify-center items-center h-[100dvh] m-0 overflow-hidden">
+<body class="bg-slate-950 flex justify-center items-center h-[100dvh] w-screen overflow-hidden m-0">
 
     <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col relative overflow-hidden border border-zinc-800">
+    <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col justify-between relative overflow-hidden border border-zinc-800">
 
-        <!-- TOP HEADER (Fixed Stable) -->
-        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-4 flex justify-between items-center shadow-md z-30 shrink-0 hidden">
+        <!-- TOP HEADER (Permanently Pinned Top) -->
+        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3.5 flex justify-between items-center shadow-md z-30 shrink-0 hidden">
             <div>
                 <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase">ANU AARI MATERIALS</h1>
                 <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
@@ -35,18 +36,18 @@
             </button>
         </header>
 
-        <!-- SEARCH BAR (Fixed Stable below header) -->
-        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-4 pb-4 pt-1 z-30 shrink-0 hidden shadow-md">
+        <!-- SEARCH BAR (Permanently Pinned Top Below Header) -->
+        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3.5 pb-3 pt-0.5 z-30 shrink-0 hidden shadow-md">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <i class="fa-solid fa-search text-xs"></i>
                 </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-3 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-2.5 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
             </div>
         </div>
 
-        <!-- MAIN SCROLLABLE CONTENT AREA (Only this part scrolls internally) -->
-        <main id="main-content" class="flex-1 overflow-y-auto p-4 bg-zinc-100/70 pb-24">
+        <!-- MAIN SCROLLABLE CONTENT AREA (Only this middle section scrolls) -->
+        <main id="main-content" class="flex-1 overflow-y-auto p-4 bg-zinc-100/70">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
                 <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
@@ -65,8 +66,8 @@
             Notification message
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR (Permanently Locked at Bottom) -->
-        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-2xl z-30 shrink-0 hidden">
+        <!-- BOTTOM NAVIGATION BAR (Permanently Pinned Bottom) -->
+        <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-2xl z-30 shrink-0 hidden">
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] mt-1 font-semibold">Home</span>
@@ -447,7 +448,7 @@
 
             if (currentTab === 'home') {
                 container.innerHTML = `
-                    <div class="space-y-4 pb-6">
+                    <div class="space-y-4 pb-4">
                         ${selectedSubcategoryFilter !== 'All' ? `
                             <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-3 rounded-2xl shadow-sm">
                                 <span class="text-xs font-semibold text-rose-900 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
@@ -500,7 +501,7 @@
             } else if (currentTab === 'categories') {
                 if (!selectedCategory) {
                     container.innerHTML = `
-                        <div class="space-y-3 pb-6">
+                        <div class="space-y-3 pb-4">
                             <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
                                 <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> All Categories
                             </h3>
@@ -534,7 +535,7 @@
                     const subcategories = matchedCat ? matchedCat.subcategories : [];
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-6">
+                        <div class="space-y-3 pb-4">
                             <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 <span>Back to Categories</span>
@@ -571,7 +572,7 @@
                     const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-6">
+                        <div class="space-y-3 pb-4">
                             <div class="sticky top-0 bg-zinc-100/95 backdrop-blur-md pt-1 pb-3 z-10 border-b border-zinc-200 mb-3 space-y-2">
                                 <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline">
                                     <i class="fa-solid fa-arrow-left"></i>
@@ -624,7 +625,7 @@
             } else if (currentTab === 'cart') {
                 if (cart.length === 0) {
                     container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-6">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-4">
                             <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
                                 <i class="fa-solid fa-cart-shopping text-3xl"></i>
                             </div>
@@ -635,7 +636,7 @@
                 } else {
                     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
-                        <div class="space-y-3 flex flex-col h-full justify-between pb-6">
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-4">
                             <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                                 ${cart.map(item => {
                                     const displayName = getDisplayName(item);
@@ -680,7 +681,7 @@
         function showCheckoutForm() {
             const container = document.getElementById('main-content');
             container.innerHTML = `
-                <div class="space-y-3.5 pb-6">
+                <div class="space-y-3.5 pb-4">
                     <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
                     <div class="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
                         <div>
