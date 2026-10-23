@@ -17,10 +17,10 @@
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="bg-black flex justify-center items-center h-[100dvh] w-screen overflow-hidden m-0">
+<body class="bg-black flex justify-center items-center h-screen w-screen overflow-hidden m-0">
 
     <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-950 flex flex-col justify-between relative overflow-hidden border border-zinc-800 text-zinc-100">
+    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-950 flex flex-col justify-between relative overflow-hidden border border-zinc-800 text-zinc-100">
 
         <!-- TOP HEADER -->
         <header id="app-header" class="bg-gradient-to-r from-amber-600 to-yellow-600 text-slate-950 p-3 flex justify-between items-center shadow-md z-30 shrink-0">
@@ -64,7 +64,7 @@
         </div>
 
         <!-- MAIN SCROLLABLE CONTENT AREA -->
-        <main id="main-content" class="flex-1 overflow-y-auto p-3 pt-2 bg-zinc-950">
+        <main id="main-content" class="flex-1 overflow-y-auto p-3 pt-2 bg-zinc-950 min-h-0">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
                 <div class="w-14 h-14 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400 shadow-sm">
@@ -818,4 +818,4 @@
         initApp();
     </script>
 </body>
-</html>
+</html>    
