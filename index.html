@@ -148,12 +148,17 @@
             if (String(rawId).trim() !== "") {
                 return String(rawId).trim();
             }
-            // Fallback unique key combining product name and array index to guarantee uniqueness
             return String(getDisplayName(product) + "_" + index).trim();
         }
 
         function getDisplayName(product) {
-            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || "Item";
+            const englishName = product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || "Item";
+            const tamilName = product.Tamil_Name || product.tamil_name || product.Tamil || product.TAMIL || "";
+            
+            if (tamilName.trim() !== "") {
+                return `${englishName} / ${tamilName}`;
+            }
+            return englishName;
         }
 
         function getProductPrice(product) {
@@ -703,7 +708,8 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join(', ');
+            // Formatted to place each item on a separate line (\n)
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join('\n');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
