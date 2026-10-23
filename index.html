@@ -145,29 +145,29 @@
         }
 
         function getProductId(product) {
-            return product.id || product.Item_ID || product.item_id || product.ID || "";
+            return product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || "";
         }
 
         function getDisplayName(product) {
-            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.subcategory || product.Subcategory || getProductId(product) || "Item";
+            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || getProductId(product) || "Item";
         }
 
         function getProductPrice(product) {
-            const raw = product.price !== undefined ? product.price : (product['Price (INR)'] !== undefined ? product['Price (INR)'] : (product.Price !== undefined ? product.Price : 0));
+            const raw = product.price !== undefined ? product.price : (product['Price (INR)'] !== undefined ? product['Price (INR)'] : (product.Price !== undefined ? product.Price : (product['price (inr)'] !== undefined ? product['price (inr)'] : 0)));
             const num = parseFloat(raw);
             return isNaN(num) ? 0 : num;
         }
 
         function getProductSubcategory(product) {
-            return product.subcategory || product.Subcategory || product.SUBCATEGORY || "";
+            return product.subcategory || product.Subcategory || product.SUBCATEGORY || product['Subcategory'] || "";
         }
 
         function getProductCategory(product) {
-            return product.category || product.Category || product.CATEGORY || "";
+            return product.category || product.Category || product.CATEGORY || product['Category'] || "";
         }
 
         function getProductImage(product) {
-            return product.image || product.images || product.Images || product.IMAGE || "";
+            return product.image || product.images || product.Images || product.IMAGE || product['images'] || "";
         }
 
         function initApp() {
