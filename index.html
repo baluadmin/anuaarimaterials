@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ANU AARI MATERIALS</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,57 +11,42 @@
     <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
     <!-- PWA Manifest Link -->
     <link rel="manifest" href="./manifest.json">
 </head>
-<body class="bg-slate-950 flex justify-center items-center h-[100dvh] w-screen overflow-hidden m-0">
+<body class="bg-slate-950 flex justify-center items-center h-screen m-0">
 
     <!-- Mobile Frame Container -->
-    <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col justify-between relative overflow-hidden border border-zinc-800">
+    <div class="w-full max-w-md h-full sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col relative overflow-hidden border border-zinc-800">
 
         <!-- TOP HEADER -->
-        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3 flex justify-between items-center shadow-md z-30 shrink-0 hidden">
-            <div class="flex items-center space-x-2.5 overflow-hidden">
-                <button id="header-back-btn" onclick="handleHeaderBack()" class="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition hidden shrink-0">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                </button>
-                <div class="truncate">
-                    <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase truncate">ANU AARI MATERIALS</h1>
-                    <a id="header-phone" href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
-                        <i class="fa-solid fa-phone text-[10px]"></i>
-                        <span>9840450113</span>
-                    </a>
-                </div>
+        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-4 flex justify-between items-center shadow-md z-10 hidden">
+            <div>
+                <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase">ANU AARI MATERIALS</h1>
+                <a href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
+                    <i class="fa-solid fa-phone text-[10px]"></i>
+                    <span>9840450113</span>
+                </a>
             </div>
-            <button onclick="logout()" class="text-[11px] bg-white/20 px-3 py-1.5 rounded-xl text-white hover:bg-white/30 transition font-medium backdrop-blur-sm shrink-0 ml-2">
+            <button onclick="logout()" class="text-[11px] bg-white/20 px-3 py-1.5 rounded-xl text-white hover:bg-white/30 transition font-medium backdrop-blur-sm">
                 <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
             </button>
         </header>
 
-        <!-- SEARCH BAR -->
-        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3 pb-3 pt-0.5 z-30 shrink-0 hidden shadow-md">
+        <!-- SEARCH BAR (Visible on Home Tab) -->
+        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-4 pb-4 pt-1 z-10 hidden">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <i class="fa-solid fa-search text-xs"></i>
                 </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-2 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." class="w-full pl-10 pr-4 py-3 bg-white/95 rounded-2xl text-xs focus:outline-none shadow-sm text-zinc-800 placeholder-zinc-400 font-medium">
             </div>
         </div>
 
-        <!-- STABLE SUB-HEADER BAR -->
-        <div id="subheader-container" class="bg-zinc-100 border-b border-zinc-200 px-3 py-2 z-20 shrink-0 hidden flex items-center justify-between shadow-sm">
-            <button onclick="handleHeaderBack()" class="text-xs text-rose-600 font-bold flex items-center space-x-1 hover:underline">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span id="subheader-back-text">Back</span>
-            </button>
-            <span id="subheader-title" class="text-xs font-bold text-zinc-700 uppercase truncate ml-2"></span>
-        </div>
-
         <!-- MAIN SCROLLABLE CONTENT AREA -->
-        <main id="main-content" class="flex-1 overflow-y-auto p-3 pt-2 bg-zinc-100/70">
+        <main id="main-content" class="flex-1 overflow-y-auto pb-20 p-4 bg-zinc-100/70">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
                 <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
@@ -81,7 +66,7 @@
         </div>
 
         <!-- BOTTOM NAVIGATION BAR -->
-        <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-2xl z-30 shrink-0 hidden">
+        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-lg z-10 hidden">
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] mt-1 font-semibold">Home</span>
@@ -131,10 +116,11 @@
         let currentUser = null;
 
         function resolveImageUrl(imageName) {
-            if (!imageName || String(imageName).trim() === '') {
+            if (!imageName || imageName.trim() === '') {
                 return 'https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';
             }
-            let clean = String(imageName).trim();
+            
+            let clean = imageName.trim();
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
                 return clean;
             }
@@ -144,30 +130,8 @@
             return encodeURI(clean);
         }
 
-        function getProductId(product) {
-            return product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || "";
-        }
-
         function getDisplayName(product) {
-            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || getProductId(product) || "Item";
-        }
-
-        function getProductPrice(product) {
-            const raw = product.price !== undefined ? product.price : (product['Price (INR)'] !== undefined ? product['Price (INR)'] : (product.Price !== undefined ? product.Price : (product['price (inr)'] !== undefined ? product['price (inr)'] : 0)));
-            const num = parseFloat(raw);
-            return isNaN(num) ? 0 : num;
-        }
-
-        function getProductSubcategory(product) {
-            return product.subcategory || product.Subcategory || product.SUBCATEGORY || product['Subcategory'] || "";
-        }
-
-        function getProductCategory(product) {
-            return product.category || product.Category || product.CATEGORY || product['Category'] || "";
-        }
-
-        function getProductImage(product) {
-            return product.image || product.images || product.Images || product.IMAGE || product['images'] || "";
+            return product.product || product.productName || product.name || product.subcategory || product.id;
         }
 
         function initApp() {
@@ -250,7 +214,6 @@
         function renderLoginScreen(isSignup = false) {
             document.getElementById('app-header').classList.add('hidden');
             document.getElementById('search-container').classList.add('hidden');
-            document.getElementById('subheader-container').classList.add('hidden');
             document.getElementById('bottom-nav').classList.add('hidden');
 
             const container = document.getElementById('main-content');
@@ -300,28 +263,12 @@
                 return;
             }
 
-            const matchedUser = cachedLogins.find(u => String(u.mobile || u.Mobile || u.PRIMARY_PHONE) === phoneInput && String(u.password || u.Password || u.PASSWORD) === passInput);
+            const matchedUser = cachedLogins.find(u => String(u.mobile) === phoneInput && String(u.password) === passInput);
 
             if (matchedUser) {
-                currentUser = {
-                    name: matchedUser.name || matchedUser.Name || matchedUser.CUSTOMER_NAME || "User",
-                    mobile: phoneInput
-                };
+                currentUser = matchedUser;
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
-                
-                const loginPayload = {
-                    Type: "Login",
-                    Customer_Name: currentUser.name,
-                    Primary_Phone: currentUser.mobile
-                };
-                fetch(BASE_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(loginPayload)
-                }).catch(err => console.error("Error logging login:", err));
-
                 showToast(`Welcome back, ${currentUser.name}!`);
                 showAppUI();
             } else {
@@ -339,7 +286,7 @@
                 return;
             }
 
-            const existingUser = cachedLogins.find(u => String(u.mobile || u.Mobile) === phoneInput);
+            const existingUser = cachedLogins.find(u => String(u.mobile) === phoneInput);
             if (existingUser) {
                 showToast("Mobile number already registered. Please login.");
                 return;
@@ -360,16 +307,16 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser)
             }).then(() => {
-                currentUser = { name: nameInput, mobile: phoneInput };
-                cachedLogins.push({ name: nameInput, mobile: phoneInput, password: passInput });
+                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
+                cachedLogins.push(currentUser);
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
                 showToast("Account created successfully!");
                 showAppUI();
             }).catch(err => {
                 console.error("Error signing up:", err);
-                currentUser = { name: nameInput, mobile: phoneInput };
-                cachedLogins.push({ name: nameInput, mobile: phoneInput, password: passInput });
+                currentUser = { name: nameInput, mobile: phoneInput, password: passInput };
+                cachedLogins.push(currentUser);
                 localStorage.setItem('anu_aari_user', JSON.stringify(currentUser));
                 loadUserCart();
                 showToast("Account created successfully!");
@@ -407,18 +354,15 @@
             let filtered = cachedProducts;
             
             if (selectedSubcategoryFilter !== 'All') {
-                filtered = filtered.filter(p => {
-                    const sub = getProductSubcategory(p);
-                    return sub === selectedSubcategoryFilter;
-                });
+                filtered = filtered.filter(p => p.subcategory === selectedSubcategoryFilter);
             }
 
             if (searchQuery.trim() !== '') {
                 const q = searchQuery.toLowerCase();
                 filtered = filtered.filter(p => {
                     const name = getDisplayName(p).toLowerCase();
-                    const id = String(getProductId(p)).toLowerCase();
-                    const subcat = String(getProductSubcategory(p)).toLowerCase();
+                    const id = (p.id || '').toLowerCase();
+                    const subcat = (p.subcategory || '').toLowerCase();
                     return name.includes(q) || id.includes(q) || subcat.includes(q);
                 });
             }
@@ -432,58 +376,8 @@
             renderContent();
         }
 
-        function updateHeaderTitle() {
-            const titleEl = document.getElementById('header-title');
-            const phoneEl = document.getElementById('header-phone');
-            const backBtn = document.getElementById('header-back-btn');
-            const subheaderContainer = document.getElementById('subheader-container');
-            const subheaderTitle = document.getElementById('subheader-title');
-            const subheaderBackText = document.getElementById('subheader-back-text');
-
-            if (currentTab === 'home') {
-                titleEl.innerText = "ANU AARI MATERIALS";
-                phoneEl.classList.remove('hidden');
-                backBtn.classList.add('hidden');
-                subheaderContainer.classList.add('hidden');
-            } else if (currentTab === 'cart') {
-                titleEl.innerText = "YOUR CART";
-                phoneEl.classList.add('hidden');
-                backBtn.classList.add('hidden');
-                subheaderContainer.classList.add('hidden');
-            } else if (currentTab === 'categories') {
-                phoneEl.classList.add('hidden');
-                titleEl.innerText = "CATEGORIES";
-                backBtn.classList.add('hidden');
-
-                if (selectedSubcategory) {
-                    subheaderContainer.classList.remove('hidden');
-                    subheaderTitle.innerText = selectedSubcategory;
-                    subheaderBackText.innerText = "Back to Subcategories";
-                } else if (selectedCategory) {
-                    subheaderContainer.classList.remove('hidden');
-                    subheaderTitle.innerText = selectedCategory;
-                    subheaderBackText.innerText = "Back to Categories";
-                } else {
-                    subheaderContainer.classList.add('hidden');
-                }
-            }
-        }
-
-        function handleHeaderBack() {
-            if (selectedSubcategory) {
-                selectedSubcategory = null;
-            } else if (selectedCategory) {
-                selectedCategory = null;
-            }
-            updateHeaderTitle();
-            renderContent();
-        }
-
         function switchTab(tab) {
             currentTab = tab;
-            selectedCategory = null;
-            selectedSubcategory = null;
-
             ['home', 'categories', 'cart'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if (t === tab) {
@@ -500,20 +394,17 @@
                 searchContainer.classList.add('hidden');
             }
 
-            updateHeaderTitle();
             renderContent();
         }
 
         function selectCategory(catName) {
             selectedCategory = catName;
             selectedSubcategory = null;
-            updateHeaderTitle();
             renderContent();
         }
 
         function selectSubcategory(subcatName) {
             selectedSubcategory = subcatName;
-            updateHeaderTitle();
             renderContent();
         }
 
@@ -524,7 +415,7 @@
         }
 
         function getProductQuantity(productId) {
-            const item = cart.find(i => getProductId(i) === productId);
+            const item = cart.find(i => i.id === productId);
             return item ? item.quantity : 0;
         }
 
@@ -552,54 +443,50 @@
         }
 
         function renderContent() {
-            updateHeaderTitle();
             const container = document.getElementById('main-content');
 
             if (currentTab === 'home') {
                 container.innerHTML = `
-                    <div class="space-y-3 pb-2">
+                    <div class="space-y-4">
                         ${selectedSubcategoryFilter !== 'All' ? `
-                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-2.5 rounded-2xl shadow-sm mb-2">
-                                <span class="text-xs font-semibold text-rose-900 truncate">Filter: ${selectedSubcategoryFilter}</span>
+                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-3 rounded-2xl shadow-sm">
+                                <span class="text-xs font-semibold text-rose-900 truncate">Subcategory: ${selectedSubcategoryFilter}</span>
                                 <button onclick="filterBySubcategory('All')" class="text-xs text-rose-600 font-bold hover:underline whitespace-nowrap ml-2 flex items-center">
-                                    <i class="fa-solid fa-xmark mr-1"></i> Clear
+                                    <i class="fa-solid fa-arrow-left mr-1"></i> Show All
                                 </button>
                             </div>
                         ` : ''}
 
-                        <div class="grid grid-cols-1 gap-3">
+                        <div class="grid grid-cols-2 gap-3.5">
                             ${shuffledHomeProducts.length === 0 ? `
-                                <div class="text-center py-20 text-zinc-400">
+                                <div class="col-span-2 text-center py-20 text-zinc-400">
                                     <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
                                     <p class="text-xs font-medium">No materials found.</p>
                                 </div>
                             ` : shuffledHomeProducts.map(p => {
-                                const id = getProductId(p);
-                                const qty = getProductQuantity(id);
+                                const qty = getProductQuantity(p.id);
                                 const displayName = getDisplayName(p);
-                                const price = getProductPrice(p);
-                                const subcat = getProductSubcategory(p);
-                                const imgSrc = resolveImageUrl(getProductImage(p));
+                                const imgSrc = resolveImageUrl(p.image);
                                 return `
                                     <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
+                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
                                         </div>
-                                        <div class="flex flex-col items-center justify-center text-center px-1">
-                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words text-center" title="${displayName}">${displayName}</h4>
+                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                                <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
                                             </div>
                                         </div>
-                                        <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                            <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
+                                        <div class="flex justify-between items-center mt-2.5">
+                                            <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
                                             
-                                            <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
                                                     <i class="fa-solid fa-minus text-[10px]"></i>
                                                 </button>
-                                                <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                <span class="text-xs font-bold text-rose-900 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
                                                     <i class="fa-solid fa-plus text-[10px]"></i>
                                                 </button>
                                             </div>
@@ -611,42 +498,29 @@
                     </div>
                 `;
             } else if (currentTab === 'categories') {
-                let categoriesList = cachedCategories;
-                if (!categoriesList || categoriesList.length === 0) {
-                    let catMap = {};
-                    cachedProducts.forEach(p => {
-                        let cat = getProductCategory(p) || "General";
-                        let sub = getProductSubcategory(p) || "All";
-                        if (!catMap[cat]) catMap[cat] = new Set();
-                        if (sub) catMap[cat].add(sub);
-                    });
-                    categoriesList = Object.keys(catMap).map(c => ({
-                        categoryName: c,
-                        subcategories: Array.from(catMap[c])
-                    }));
-                }
-
                 if (!selectedCategory) {
                     container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-2.5">
-                                ${categoriesList.map(cat => {
-                                    const catName = cat.categoryName || cat.Category || "Category";
-                                    const catProducts = cachedProducts.filter(p => getProductCategory(p) === catName || getProductSubcategory(p) === catName);
+                        <div class="space-y-3">
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">
+                                <i class="fa-solid fa-folder text-amber-500 mr-1.5"></i> All Categories
+                            </h3>
+                            <div class="grid grid-cols-1 gap-3">
+                                ${cachedCategories.map(cat => {
+                                    const catProducts = cachedProducts.filter(p => p.category === cat.categoryName);
                                     let catImage = cat.image || '';
                                     if (!catImage && catProducts.length > 0) {
                                         const shuffledCatProducts = shuffleArray(catProducts);
-                                        catImage = getProductImage(shuffledCatProducts[0]);
+                                        catImage = shuffledCatProducts[0].image;
                                     }
                                     const catImgSrc = resolveImageUrl(catImage);
 
                                     return `
-                                        <div onclick="selectCategory('${catName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div onclick="selectCategory('${cat.categoryName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
-                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-folder-open"></i>`}
                                                 </div>
-                                                <span class="font-bold text-zinc-800 text-xs">${catName}</span>
+                                                <span class="font-bold text-zinc-800 text-xs">${cat.categoryName}</span>
                                             </div>
                                             <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
                                         </div>
@@ -656,25 +530,32 @@
                         </div>
                     `;
                 } else if (!selectedSubcategory) {
-                    const matchedCat = categoriesList.find(c => (c.categoryName || c.Category) === selectedCategory);
-                    const subcategories = matchedCat ? (matchedCat.subcategories || matchedCat.Subcategories || []) : [];
+                    const matchedCat = cachedCategories.find(c => c.categoryName === selectedCategory);
+                    const subcategories = matchedCat ? matchedCat.subcategories : [];
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-2.5">
+                        <div class="space-y-3">
+                            <button onclick="selectCategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline mb-2">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                <span>Back to Categories</span>
+                            </button>
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2 truncate">
+                                <i class="fa-solid fa-tags text-rose-600 mr-1.5"></i> ${selectedCategory}
+                            </h3>
+                            <div class="grid grid-cols-1 gap-3">
                                 ${subcategories.map(sub => {
-                                    const subProducts = cachedProducts.filter(p => getProductSubcategory(p) === sub);
+                                    const subProducts = cachedProducts.filter(p => p.subcategory === sub);
                                     let subImage = '';
                                     if (subProducts.length > 0) {
                                         const shuffledSubProducts = shuffleArray(subProducts);
-                                        subImage = getProductImage(shuffledSubProducts[0]);
+                                        subImage = shuffledSubProducts[0].image;
                                     }
                                     const subImgSrc = resolveImageUrl(subImage);
 
                                     return `
-                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
+                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
                                             <div class="flex items-center space-x-3.5">
-                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
+                                                <div class="w-12 h-12 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
                                                     ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Subcategory';" class="w-full h-full object-cover">` : `<i class="fa-solid fa-tag text-sm"></i>`}
                                                 </div>
                                                 <span class="font-bold text-zinc-800 text-xs">${sub}</span>
@@ -687,57 +568,61 @@
                         </div>
                     `;
                 } else {
-                    const subcategoryProducts = cachedProducts.filter(p => getProductSubcategory(p) === selectedSubcategory);
+                    const subcategoryProducts = cachedProducts.filter(p => p.subcategory === selectedSubcategory);
 
                     container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-3">
-                                ${subcategoryProducts.length === 0 ? `
-                                    <div class="text-center py-20 text-zinc-400">
-                                        <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
-                                        <p class="text-xs font-medium">No products found in this subcategory.</p>
-                                    </div>
-                                ` : subcategoryProducts.map(p => {
-                                    const id = getProductId(p);
-                                    const qty = getProductQuantity(id);
-                                    const displayName = getDisplayName(p);
-                                    const price = getProductPrice(p);
-                                    const subcat = getProductSubcategory(p);
-                                    const imgSrc = resolveImageUrl(getProductImage(p));
-                                    return `
-                                        <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
-                                            </div>
-                                            <div class="flex flex-col items-center justify-center text-center px-1">
-                                                <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                                <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                    <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                                <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
-                                                <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
-                                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                                    </button>
-                                                    <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
-                                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    </button>
-                                                </div>
+                        <div class="sticky top-0 bg-zinc-100/95 backdrop-blur-md pt-1 pb-3 z-10 border-b border-zinc-200 mb-3 space-y-2">
+                            <button onclick="selectSubcategory(null)" class="text-xs text-rose-600 font-semibold flex items-center space-x-1 hover:underline">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                <span>Back to Subcategories</span>
+                            </button>
+                            <h3 class="text-xs font-bold text-zinc-400 uppercase tracking-wider truncate">
+                                <i class="fa-solid fa-box text-rose-600 mr-1.5"></i> ${selectedSubcategory}
+                            </h3>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3.5">
+                            ${subcategoryProducts.length === 0 ? `
+                                <div class="col-span-2 text-center py-20 text-zinc-400">
+                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
+                                    <p class="text-xs font-medium">No products found in this subcategory.</p>
+                                </div>
+                            ` : subcategoryProducts.map(p => {
+                                const qty = getProductQuantity(p.id);
+                                const displayName = getDisplayName(p);
+                                const imgSrc = resolveImageUrl(p.image);
+                                return `
+                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${p.id}', ${p.price}, '${imgSrc}')" class="cursor-pointer">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-28 object-cover rounded-2xl mb-2.5 bg-zinc-50 shadow-inner">
+                                        </div>
+                                        <div class="flex flex-col items-center justify-center text-center">
+                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 min-h-[32px] break-words text-center" title="${displayName}">${displayName}</h4>
+                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-1 w-full text-center">
+                                                <span>${p.id}</span>${p.subcategory ? `<span class="text-zinc-300">•</span><span class="truncate">${p.subcategory}</span>` : ''}
                                             </div>
                                         </div>
-                                    `;
-                                }).join('')}
-                            </div>
+                                        <div class="flex justify-between items-center mt-2.5">
+                                            <span class="text-rose-600 font-extrabold text-sm">₹${p.price.toFixed(2)}</span>
+                                            <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
+                                                <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                    <i class="fa-solid fa-minus text-[10px]"></i>
+                                                </button>
+                                                <span class="text-xs font-bold text-rose-900 px-1.5">${qty}</span>
+                                                <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-6 h-6 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                    <i class="fa-solid fa-plus text-[10px]"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     `;
                 }
             } else if (currentTab === 'cart') {
                 if (cart.length === 0) {
                     container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-2">
+                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20">
                             <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
                                 <i class="fa-solid fa-cart-shopping text-3xl"></i>
                             </div>
@@ -746,30 +631,28 @@
                         </div>
                     `;
                 } else {
-                    const total = cart.reduce((sum, item) => sum + (getProductPrice(item) * item.quantity), 0).toFixed(2);
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
                     container.innerHTML = `
-                        <div class="space-y-3 flex flex-col h-full justify-between pb-2">
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-10">
                             <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
                                 ${cart.map(item => {
                                     const displayName = getDisplayName(item);
-                                    const price = getProductPrice(item);
-                                    const id = getProductId(item);
-                                    const imgSrc = resolveImageUrl(getProductImage(item));
+                                    const imgSrc = resolveImageUrl(item.image);
                                     return `
                                     <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
                                         <div class="flex items-center space-x-3.5">
                                             <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-12 h-12 object-cover rounded-2xl bg-zinc-50 shadow-inner">
                                             <div>
                                                 <h4 class="text-xs font-bold text-zinc-800 leading-snug">${displayName}</h4>
-                                                <span class="text-rose-600 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
+                                                <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                            <button onclick="decreaseQuantity('${id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
                                             <span class="text-xs font-bold px-1.5 text-zinc-800">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
@@ -777,7 +660,7 @@
                                     `;
                                 }).join('')}
                             </div>
-                            <div class="bg-white border border-zinc-200/80 p-4 rounded-3xl shadow-sm shrink-0">
+                            <div class="bg-white border border-zinc-200/80 p-4 rounded-3xl shadow-sm">
                                 <div class="flex justify-between font-bold text-zinc-800 mb-3 text-xs">
                                     <span>Total Amount:</span>
                                     <span class="text-rose-600 text-base">₹${total}</span>
@@ -795,7 +678,7 @@
         function showCheckoutForm() {
             const container = document.getElementById('main-content');
             container.innerHTML = `
-                <div class="space-y-3 pb-2">
+                <div class="space-y-3.5 pb-10">
                     <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
                     <div class="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
                         <div>
@@ -839,7 +722,7 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join(', ');
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
@@ -892,10 +775,10 @@
         }
 
         function increaseQuantity(productId) {
-            const product = cachedProducts.find(p => getProductId(p) === productId);
+            const product = cachedProducts.find(p => p.id === productId);
             if (!product) return;
             
-            const existing = cart.find(i => getProductId(i) === productId);
+            const existing = cart.find(i => i.id === productId);
             if (existing) {
                 existing.quantity += 1;
             } else {
@@ -908,7 +791,7 @@
         }
 
         function decreaseQuantity(productId) {
-            const existingIndex = cart.findIndex(i => getProductId(i) === productId);
+            const existingIndex = cart.findIndex(i => i.id === productId);
             if (existingIndex > -1) {
                 cart[existingIndex].quantity -= 1;
                 if (cart[existingIndex].quantity <= 0) {
@@ -931,6 +814,7 @@
             }
         }
 
+        // Initialize the app immediately
         initApp();
     </script>
 </body>
