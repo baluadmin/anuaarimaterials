@@ -139,7 +139,8 @@
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
                 return clean;
             }
-            if (!clean.startsWith('images/') && !clean.startsWith('./images/')) {
+            clean = clean.replace(/^\.?\/*/, '');
+            if (!clean.startsWith('images/')) {
                 clean = 'images/' + clean;
             }
             return encodeURI(clean);
@@ -209,7 +210,6 @@
                     if (data.status === "success") {
                         cachedProducts = data.products || [];
                         cachedCategories = data.categories || [];
-                        console.log("Cached Products Loaded:", cachedProducts);
                         loadCart();
                         prepareHomeProducts();
                         switchTab('home');
@@ -735,7 +735,7 @@
                 return;
             }
 
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join(', ');
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${(getProductPrice(item) * item.quantity).toFixed(2)})`).join(', ');
             const timestamp = new Date().toLocaleString();
 
             const orderPayload = {
