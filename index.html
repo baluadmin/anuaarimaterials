@@ -604,4 +604,221 @@
                                                 </div>
                                             </div>
                                             <div class="flex justify-between items-center mt-2 pt-1 border-t border-zinc-100">
-                                                <span class="text-rose-600 font-extrabold text-xs">₹${p.price.
+                                                <span class="text-rose-600 font-extrabold text-xs">₹${p.price.toFixed(2)}</span>
+                                                <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-0.5">
+                                                    <button onclick="decreaseQuantity('${p.id}')" class="bg-white text-rose-600 w-5 h-5 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
+                                                        <i class="fa-solid fa-minus text-[9px]"></i>
+                                                    </button>
+                                                    <span class="text-[11px] font-bold text-rose-900 px-1">${qty}</span>
+                                                    <button onclick="increaseQuantity('${p.id}')" class="bg-rose-600 text-white w-5 h-5 rounded-lg flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
+                                                        <i class="fa-solid fa-plus text-[9px]"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (currentTab === 'cart') {
+                if (cart.length === 0) {
+                    container.innerHTML = `
+                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-4">
+                            <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
+                                <i class="fa-solid fa-cart-shopping text-3xl"></i>
+                            </div>
+                            <p class="text-sm font-bold text-zinc-800">Your cart is empty</p>
+                            <p class="text-xs text-zinc-400 max-w-[200px]">Add items from the home screen to place your order.</p>
+                        </div>
+                    `;
+                } else {
+                    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2);
+                    container.innerHTML = `
+                        <div class="space-y-3 flex flex-col h-full justify-between pb-4">
+                            <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                                ${cart.map(item => {
+                                    const displayName = getDisplayName(item);
+                                    const imgSrc = resolveImageUrl(item.image);
+                                    return `
+                                    <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3 rounded-2xl shadow-sm">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-10 h-10 object-cover rounded-xl bg-zinc-50 shadow-inner">
+                                            <div>
+                                                <h4 class="text-xs font-bold text-zinc-800 leading-snug">${displayName}</h4>
+                                                <span class="text-rose-600 font-semibold text-xs">₹${item.price.toFixed(2)} × ${item.quantity} = ₹${(item.price * item.quantity).toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-xl p-0.5">
+                                            <button onclick="decreaseQuantity('${item.id}')" class="text-rose-600 hover:text-red-600 w-5 h-5 rounded-lg flex items-center justify-center transition">
+                                                <i class="fa-solid fa-minus text-[9px]"></i>
+                                            </button>
+                                            <span class="text-[11px] font-bold px-1 text-zinc-800">${item.quantity}</span>
+                                            <button onclick="increaseQuantity('${item.id}')" class="text-rose-600 hover:text-rose-700 w-5 h-5 rounded-lg flex items-center justify-center transition">
+                                                <i class="fa-solid fa-plus text-[9px]"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="bg-white border border-zinc-200/80 p-3.5 rounded-2xl shadow-sm shrink-0">
+                                <div class="flex justify-between font-bold text-zinc-800 mb-2.5 text-xs">
+                                    <span>Total Amount:</span>
+                                    <span class="text-rose-600 text-sm">₹${total}</span>
+                                </div>
+                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3 rounded-xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] text-xs">
+                                    Proceed to Checkout
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function showCheckoutForm() {
+            const container = document.getElementById('main-content');
+            container.innerHTML = `
+                <div class="space-y-3 pb-4">
+                    <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
+                    <div class="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-sm space-y-2.5">
+                        <div>
+                            <label class="text-[10px] font-bold text-zinc-700 uppercase tracking-wider">Full Name *</label>
+                            <input type="text" id="cust-name" value="${currentUser ? currentUser.name : ''}" class="w-full border border-zinc-200 rounded-xl p-2.5 text-xs mt-0.5 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-zinc-700 uppercase tracking-wider">Primary Phone Number *</label>
+                            <input type="tel" id="cust-phone" value="${currentUser ? currentUser.mobile : ''}" class="w-full border border-zinc-200 rounded-xl p-2.5 text-xs mt-0.5 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="9840450113">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-zinc-700 uppercase tracking-wider">Secondary Phone (Optional)</label>
+                            <input type="tel" id="cust-sec-phone" class="w-full border border-zinc-200 rounded-xl p-2.5 text-xs mt-0.5 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Alternative number">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-zinc-700 uppercase tracking-wider">Delivery Address *</label>
+                            <textarea id="cust-address" class="w-full border border-zinc-200 rounded-xl p-2.5 text-xs mt-0.5 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" rows="2" placeholder="House no, street, area"></textarea>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-bold text-zinc-700 uppercase tracking-wider">Special Instructions / Notes</label>
+                            <input type="text" id="cust-desc" class="w-full border border-zinc-200 rounded-xl p-2.5 text-xs mt-0.5 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" placeholder="Any specific requests">
+                        </div>
+                        <div class="pt-1 flex space-x-2">
+                            <button onclick="switchTab('cart')" class="w-1/2 bg-zinc-100 text-zinc-700 py-3 rounded-xl text-xs font-semibold hover:bg-zinc-200 transition">Back</button>
+                            <button onclick="submitOrderToSheet()" class="w-1/2 bg-emerald-600 text-white py-3 rounded-xl text-xs font-semibold shadow hover:bg-emerald-700 transition">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function submitOrderToSheet() {
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const secPhone = document.getElementById('cust-sec-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            const desc = document.getElementById('cust-desc').value.trim();
+
+            if (!name || !phone || !address) {
+                showToast("Please fill in required fields.");
+                return;
+            }
+
+            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${item.price * item.quantity})`).join(', ');
+            const timestamp = new Date().toLocaleString();
+
+            const orderPayload = {
+                Type: "Order",
+                Timestamp: timestamp,
+                Customer_Name: name,
+                Primary_Phone: phone,
+                Items: itemsList,
+                Address: address,
+                Secondary_Phone: secPhone,
+                Description: desc
+            };
+
+            const loginPayload = {
+                Type: "Login",
+                Customer_Name: name,
+                Primary_Phone: phone
+            };
+
+            showToast("Submitting order...");
+
+            fetch(BASE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderPayload)
+            }).then(() => {
+                return fetch(BASE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(loginPayload)
+                });
+            }).then(() => {
+                showToast("Order placed successfully!");
+                cart = [];
+                saveUserCart();
+                updateCartBadge();
+                prepareHomeProducts();
+                switchTab('home');
+            }).catch(err => {
+                console.error("Error submitting order:", err);
+                showToast("Order submitted!");
+                cart = [];
+                saveUserCart();
+                updateCartBadge();
+                prepareHomeProducts();
+                switchTab('home');
+            });
+        }
+
+        function increaseQuantity(productId) {
+            const product = cachedProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existing = cart.find(i => i.id === productId);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            saveUserCart();
+            updateCartBadge();
+            renderContent();
+            showToast(`Added ${getDisplayName(product)} to cart`);
+        }
+
+        function decreaseQuantity(productId) {
+            const existingIndex = cart.findIndex(i => i.id === productId);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity -= 1;
+                if (cart[existingIndex].quantity <= 0) {
+                    cart.splice(existingIndex, 1);
+                }
+            }
+            saveUserCart();
+            updateCartBadge();
+            renderContent();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalCount > 0) {
+                badge.innerText = totalCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Initialize the app immediately
+        initApp();
+    </script>
+</body>
+</html>
