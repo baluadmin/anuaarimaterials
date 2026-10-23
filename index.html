@@ -23,14 +23,14 @@
     <div class="w-full max-w-md h-[100dvh] sm:h-[850px] sm:rounded-3xl sm:shadow-2xl bg-zinc-50 flex flex-col justify-between relative overflow-hidden border border-zinc-800">
 
         <!-- TOP HEADER -->
-        <header id="app-header" class="bg-gradient-to-r from-rose-700 to-pink-700 text-white p-3 flex justify-between items-center shadow-md z-30 shrink-0">
+        <header id="app-header" class="bg-gradient-to-r from-sky-600 to-blue-600 text-white p-3 flex justify-between items-center shadow-md z-30 shrink-0">
             <div class="flex items-center space-x-2.5 overflow-hidden">
                 <button id="header-back-btn" onclick="handleHeaderBack()" class="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition hidden shrink-0">
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                 </button>
                 <div class="truncate">
                     <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase truncate">ANU AARI MATERIALS</h1>
-                    <a id="header-phone" href="tel:9840450113" class="text-[11px] text-pink-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
+                    <a id="header-phone" href="tel:9840450113" class="text-[11px] text-sky-100 flex items-center space-x-1 mt-0.5 hover:underline font-medium">
                         <i class="fa-solid fa-phone text-[10px]"></i>
                         <span>9840450113</span>
                     </a>
@@ -42,7 +42,7 @@
         </header>
 
         <!-- SEARCH BAR -->
-        <div id="search-container" class="bg-gradient-to-r from-rose-700 to-pink-700 px-3 pb-3 pt-0.5 z-30 shrink-0 shadow-md">
+        <div id="search-container" class="bg-gradient-to-r from-sky-600 to-blue-600 px-3 pb-3 pt-0.5 z-30 shrink-0 shadow-md">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <i class="fa-solid fa-search text-xs"></i>
@@ -53,7 +53,7 @@
 
         <!-- STABLE SUB-HEADER BAR -->
         <div id="subheader-container" class="bg-zinc-100 border-b border-zinc-200 px-3 py-2 z-20 shrink-0 hidden flex items-center justify-between shadow-sm">
-            <button onclick="handleHeaderBack()" class="text-xs text-rose-600 font-bold flex items-center space-x-1 hover:underline">
+            <button onclick="handleHeaderBack()" class="text-xs text-sky-600 font-bold flex items-center space-x-1 hover:underline">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span id="subheader-back-text">Back</span>
             </button>
@@ -64,14 +64,14 @@
         <main id="main-content" class="flex-1 overflow-y-auto p-3 pt-2 bg-zinc-100/70">
             <!-- Welcome Loading Screen -->
             <div class="flex flex-col items-center justify-center h-full text-center space-y-4 px-6">
-                <div class="w-14 h-14 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-600 shadow-sm">
+                <div class="w-14 h-14 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600 shadow-sm">
                     <i class="fa-solid fa-store text-xl"></i>
                 </div>
                 <div class="space-y-1">
                     <h2 class="text-xs font-bold text-zinc-800 tracking-wider">WELCOME TO ANU AARI MATERIALS</h2>
                     <p class="text-[11px] text-zinc-500 font-medium">LOADING STORE...</p>
                 </div>
-                <div class="w-6 h-6 border-2 border-rose-600 border-t-transparent rounded-full animate-spin mt-2"></div>
+                <div class="w-6 h-6 border-2 border-sky-600 border-t-transparent rounded-full animate-spin mt-2"></div>
             </div>
         </main>
 
@@ -82,18 +82,18 @@
 
         <!-- BOTTOM NAVIGATION BAR -->
         <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-zinc-200 flex justify-around items-center h-16 shadow-2xl z-30 shrink-0">
-            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-rose-600 transition">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-sky-600 transition">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] mt-1 font-semibold">Home</span>
             </button>
-            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-zinc-400 hover:text-rose-600 transition">
+            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-zinc-400 hover:text-sky-600 transition">
                 <i class="fa-solid fa-layer-group text-lg"></i>
                 <span class="text-[10px] mt-1 font-semibold">Categories</span>
             </button>
-            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-zinc-400 hover:text-rose-600 transition relative">
+            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-zinc-400 hover:text-sky-600 transition relative">
                 <i class="fa-solid fa-cart-shopping text-lg"></i>
                 <span class="text-[10px] mt-1 font-semibold">Cart</span>
-                <span id="cart-badge" class="absolute -top-1 right-2 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden shadow-sm">0</span>
+                <span id="cart-badge" class="absolute -top-1 right-2 bg-sky-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden shadow-sm">0</span>
             </button>
         </nav>
 
@@ -105,10 +105,10 @@
             <button onclick="closeImageModal()" class="absolute top-3 right-4 text-zinc-400 hover:text-zinc-600 text-sm w-7 h-7 rounded-full bg-zinc-100 flex items-center justify-center transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
-            <img id="modal-img" src="" class="w-full h-56 object-contain rounded-2xl mb-4 bg-white shadow-inner" onerror="this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';">
+            <img id="modal-img" src="" class="w-full h-56 object-contain rounded-2xl mb-4 bg-white shadow-inner" onerror="this.src='https://placehold.co/400x300/e0f2fe/0284c7?text=ANU+AARI';">
             <h3 id="modal-title" class="text-xs font-bold text-zinc-800 mb-1 leading-snug text-center"></h3>
             <p id="modal-id" class="text-[10px] text-zinc-400 mb-3 font-mono text-center"></p>
-            <span id="modal-price" class="text-rose-600 font-extrabold text-sm block text-center"></span>
+            <span id="modal-price" class="text-sky-600 font-extrabold text-sm block text-center"></span>
         </div>
     </div>
 
@@ -130,7 +130,7 @@
 
         function resolveImageUrl(imageName) {
             if (!imageName || String(imageName).trim() === '') {
-                return 'https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';
+                return 'https://placehold.co/400x300/e0f2fe/0284c7?text=ANU+AARI';
             }
             let clean = String(imageName).trim();
             if (clean.startsWith('http://') || clean.startsWith('https://')) {
@@ -176,7 +176,7 @@
                         <div class="flex flex-col items-center justify-center h-full text-center text-amber-600 text-xs p-6 space-y-3">
                             <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                             <p class="font-bold">Connection is taking longer than expected.</p>
-                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm hover:bg-rose-700 transition">Retry Connection</button>
+                            <button onclick="initApp()" class="mt-2 bg-sky-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm hover:bg-sky-700 transition">Retry Connection</button>
                         </div>
                     `;
                 }
@@ -197,7 +197,7 @@
                             <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
                                 <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
                                 <p>Error loading sheet data: ${data.message}</p>
-                                <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
+                                <button onclick="initApp()" class="mt-2 bg-sky-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
                             </div>
                         `;
                     }
@@ -209,7 +209,7 @@
                         <div class="flex flex-col items-center justify-center h-full text-center text-red-500 text-xs p-6">
                             <i class="fa-solid fa-triangle-exclamation text-2xl mb-2"></i>
                             <p>Failed to connect to Google Sheet. Please check your connection or URL.</p>
-                            <button onclick="initApp()" class="mt-2 bg-rose-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
+                            <button onclick="initApp()" class="mt-2 bg-sky-600 text-white px-4 py-2 rounded-2xl font-semibold shadow-sm">Retry</button>
                         </div>
                     `;
                 });
@@ -326,9 +326,9 @@
             ['home', 'categories', 'cart'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if (t === tab) {
-                    btn.className = "flex flex-col items-center text-rose-600 transition";
+                    btn.className = "flex flex-col items-center text-sky-600 transition";
                 } else {
-                    btn.className = "flex flex-col items-center text-zinc-400 hover:text-rose-600 transition";
+                    btn.className = "flex flex-col items-center text-zinc-400 hover:text-sky-600 transition";
                 }
             });
 
@@ -381,383 +381,4 @@
         function openImageModal(name, id, price, image) {
             document.getElementById('modal-img').src = image;
             document.getElementById('modal-title').innerText = name;
-            document.getElementById('modal-id').innerText = id;
-            document.getElementById('modal-price').innerText = `₹${price.toFixed(2)}`;
-            document.getElementById('image-modal').classList.remove('hidden');
-        }
-
-        function closeImageModal() {
-            document.getElementById('image-modal').classList.add('hidden');
-        }
-
-        function renderContent() {
-            updateHeaderTitle();
-            const container = document.getElementById('main-content');
-
-            if (currentTab === 'home') {
-                container.innerHTML = `
-                    <div class="space-y-3 pb-2">
-                        ${selectedSubcategoryFilter !== 'All' ? `
-                            <div class="flex justify-between items-center bg-rose-50 border border-rose-100 p-2.5 rounded-2xl shadow-sm mb-2">
-                                <span class="text-xs font-semibold text-rose-900 truncate">Filter: ${selectedSubcategoryFilter}</span>
-                                <button onclick="filterBySubcategory('All')" class="text-xs text-rose-600 font-bold hover:underline whitespace-nowrap ml-2 flex items-center">
-                                    <i class="fa-solid fa-xmark mr-1"></i> Clear
-                                </button>
-                            </div>
-                        ` : ''}
-
-                        <div class="grid grid-cols-1 gap-3">
-                            ${shuffledHomeProducts.length === 0 ? `
-                                <div class="text-center py-20 text-zinc-400">
-                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
-                                    <p class="text-xs font-medium">No materials found.</p>
-                                </div>
-                            ` : shuffledHomeProducts.map(p => {
-                                const id = getProductId(p);
-                                const qty = getProductQuantity(id);
-                                const displayName = getDisplayName(p);
-                                const price = getProductPrice(p);
-                                const subcat = getProductSubcategory(p);
-                                const imgSrc = resolveImageUrl(getProductImage(p));
-                                return `
-                                    <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-white shadow-inner">
-                                        </div>
-                                        <div class="flex flex-col items-center justify-center text-center px-1">
-                                            <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                            <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
-                                            </div>
-                                        </div>
-                                        <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                            <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
-                                            
-                                            <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
-                                                    <i class="fa-solid fa-minus text-[10px]"></i>
-                                                </button>
-                                                <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
-                                                    <i class="fa-solid fa-plus text-[10px]"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (currentTab === 'categories') {
-                let categoriesList = cachedCategories;
-                if (!categoriesList || categoriesList.length === 0) {
-                    let catMap = {};
-                    cachedProducts.forEach(p => {
-                        let cat = getProductCategory(p) || "General";
-                        let sub = getProductSubcategory(p) || "All";
-                        if (!catMap[cat]) catMap[cat] = new Set();
-                        if (sub) catMap[cat].add(sub);
-                    });
-                    categoriesList = Object.keys(catMap).map(c => ({
-                        categoryName: c,
-                        subcategories: Array.from(catMap[c])
-                    }));
-                }
-
-                if (!selectedCategory) {
-                    container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-2.5">
-                                ${categoriesList.map(cat => {
-                                    const catName = cat.categoryName || cat.Category || "Category";
-                                    const catProducts = cachedProducts.filter(p => getProductCategory(p) === catName || getProductSubcategory(p) === catName);
-                                    let catImage = cat.image || '';
-                                    if (!catImage && catProducts.length > 0) {
-                                        const shuffledCatProducts = shuffleArray(catProducts);
-                                        catImage = getProductImage(shuffledCatProducts[0]);
-                                    }
-                                    const catImgSrc = resolveImageUrl(catImage);
-
-                                    return `
-                                        <div onclick="selectCategory('${catName}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
-                                            <div class="flex items-center space-x-3.5">
-                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
-                                                    ${catImage ? `<img src="${catImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Category';" class="w-full h-full object-contain bg-white">` : `<i class="fa-solid fa-folder-open"></i>`}
-                                                </div>
-                                                <span class="font-bold text-zinc-800 text-xs">${catName}</span>
-                                            </div>
-                                            <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else if (!selectedSubcategory) {
-                    const matchedCat = categoriesList.find(c => (c.categoryName || c.Category) === selectedCategory);
-                    const subcategories = matchedCat ? (matchedCat.subcategories || matchedCat.Subcategories || []) : [];
-
-                    container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-2.5">
-                                ${subcategories.map(sub => {
-                                    const subProducts = cachedProducts.filter(p => getProductSubcategory(p) === sub);
-                                    let subImage = '';
-                                    if (subProducts.length > 0) {
-                                        const shuffledSubProducts = shuffleArray(subProducts);
-                                        subImage = getProductImage(shuffledSubProducts[0]);
-                                    }
-                                    const subImgSrc = resolveImageUrl(subImage);
-
-                                    return `
-                                        <div onclick="selectSubcategory('${sub}')" class="bg-white border border-zinc-200/80 rounded-3xl p-3 text-left shadow-sm hover:border-rose-500 transition cursor-pointer flex items-center justify-between group">
-                                            <div class="flex items-center space-x-3.5">
-                                                <div class="w-11 h-11 bg-rose-50 rounded-2xl overflow-hidden flex items-center justify-center text-rose-600 shadow-inner group-hover:scale-105 transition">
-                                                    ${subImage ? `<img src="${subImgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Subcategory';" class="w-full h-full object-contain bg-white">` : `<i class="fa-solid fa-tag text-sm"></i>`}
-                                                </div>
-                                                <span class="font-bold text-zinc-800 text-xs">${sub}</span>
-                                            </div>
-                                            <i class="fa-solid fa-chevron-right text-xs text-zinc-400 group-hover:text-rose-600 transition pr-1"></i>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    const subcategoryProducts = cachedProducts.filter(p => getProductSubcategory(p) === selectedSubcategory);
-
-                    container.innerHTML = `
-                        <div class="space-y-3 pb-2">
-                            <div class="grid grid-cols-1 gap-3">
-                                ${subcategoryProducts.length === 0 ? `
-                                    <div class="text-center py-20 text-zinc-400">
-                                        <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-300"></i>
-                                        <p class="text-xs font-medium">No products found in this subcategory.</p>
-                                    </div>
-                                ` : subcategoryProducts.map(p => {
-                                    const id = getProductId(p);
-                                    const qty = getProductQuantity(id);
-                                    const displayName = getDisplayName(p);
-                                    const price = getProductPrice(p);
-                                    const subcat = getProductSubcategory(p);
-                                    const imgSrc = resolveImageUrl(getProductImage(p));
-                                    return `
-                                        <div class="bg-white border border-zinc-200/80 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=ANU+AARI';" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-white shadow-inner">
-                                            </div>
-                                            <div class="flex flex-col items-center justify-center text-center px-1">
-                                                <h4 class="text-xs font-bold text-zinc-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                                <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-400 truncate font-mono mt-0.5 w-full text-center">
-                                                    <span>${id}</span>${subcat ? `<span class="text-zinc-300">•</span><span class="truncate">${subcat}</span>` : ''}
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-100">
-                                                <span class="text-rose-600 font-extrabold text-sm">₹${price.toFixed(2)}</span>
-                                                <div class="flex items-center space-x-1.5 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${id}')" class="bg-white text-rose-600 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-100 transition active:scale-95">
-                                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                                    </button>
-                                                    <span class="text-xs font-bold text-rose-900 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${id}')" class="bg-rose-600 text-white w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-rose-700 transition active:scale-95">
-                                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-            } else if (currentTab === 'cart') {
-                if (cart.length === 0) {
-                    container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-400 space-y-3 pt-20 pb-2">
-                            <div class="w-20 h-20 bg-rose-50 rounded-3xl flex items-center justify-center text-rose-600 mb-1 shadow-sm">
-                                <i class="fa-solid fa-cart-shopping text-3xl"></i>
-                            </div>
-                            <p class="text-sm font-bold text-zinc-800">Your cart is empty</p>
-                            <p class="text-xs text-zinc-400 max-w-[200px]">Add items from the home screen to place your order.</p>
-                        </div>
-                    `;
-                } else {
-                    const total = cart.reduce((sum, item) => sum + (getProductPrice(item) * item.quantity), 0).toFixed(2);
-                    container.innerHTML = `
-                        <div class="space-y-3 flex flex-col h-full justify-between pb-2">
-                            <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
-                                ${cart.map(item => {
-                                    const displayName = getDisplayName(item);
-                                    const price = getProductPrice(item);
-                                    const id = getProductId(item);
-                                    const imgSrc = resolveImageUrl(getProductImage(item));
-                                    return `
-                                    <div class="flex items-center justify-between bg-white border border-zinc-200/80 p-3.5 rounded-3xl shadow-sm">
-                                        <div class="flex items-center space-x-3.5">
-                                            <img src="${imgSrc}" onerror="this.onerror=null; this.src='https://placehold.co/400x300/fecdd3/e11d48?text=Item';" class="w-12 h-12 object-contain rounded-2xl bg-white shadow-inner">
-                                            <div>
-                                                <h4 class="text-xs font-bold text-zinc-800 leading-snug">${displayName}</h4>
-                                                <span class="text-rose-600 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center space-x-1 bg-rose-50 border border-rose-100 rounded-2xl p-1">
-                                            <button onclick="decreaseQuantity('${id}')" class="text-rose-600 hover:text-red-600 w-6 h-6 rounded-xl flex items-center justify-center transition">
-                                                <i class="fa-solid fa-minus text-[10px]"></i>
-                                            </button>
-                                            <span class="text-xs font-bold px-1.5 text-zinc-800">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${id}')" class="text-rose-600 hover:text-rose-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
-                                                <i class="fa-solid fa-plus text-[10px]"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                            <div class="bg-white border border-zinc-200/80 p-4 rounded-3xl shadow-sm shrink-0">
-                                <div class="flex justify-between font-bold text-zinc-800 mb-3 text-xs">
-                                    <span>Total Amount:</span>
-                                    <span class="text-rose-600 text-base">₹${total}</span>
-                                </div>
-                                <button onclick="showCheckoutForm()" class="w-full bg-rose-600 text-white py-3.5 rounded-2xl font-semibold shadow-md hover:bg-rose-700 transition active:scale-[0.99] text-xs">
-                                    Proceed to Checkout
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        function showCheckoutForm() {
-            const container = document.getElementById('main-content');
-            container.innerHTML = `
-                <div class="space-y-3 pb-2">
-                    <h2 class="text-xs font-bold text-zinc-800 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
-                    <div class="bg-white p-5 rounded-3xl border border-zinc-200/80 shadow-sm space-y-3">
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Full Name *</label>
-                            <input type="text" id="cust-name" autocomplete="off" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Primary Phone Number *</label>
-                            <input type="tel" id="cust-phone" autocomplete="off" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Secondary Phone (Optional)</label>
-                            <input type="tel" id="cust-sec-phone" autocomplete="off" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Delivery Address *</label>
-                            <textarea id="cust-address" autocomplete="off" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800" rows="2"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">Special Instructions / Notes</label>
-                            <input type="text" id="cust-desc" autocomplete="off" class="w-full border border-zinc-200 rounded-2xl p-3 text-xs mt-1 bg-zinc-50 focus:bg-white focus:outline-rose-600 transition font-medium text-zinc-800">
-                        </div>
-                        <div class="pt-2 flex space-x-2">
-                            <button onclick="switchTab('cart')" class="w-1/2 bg-zinc-100 text-zinc-700 py-3.5 rounded-2xl text-xs font-semibold hover:bg-zinc-200 transition">Back</button>
-                            <button onclick="submitOrderToSheet()" class="w-1/2 bg-emerald-600 text-white py-3.5 rounded-2xl text-xs font-semibold shadow hover:bg-emerald-700 transition">Place Order</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function submitOrderToSheet() {
-            const name = document.getElementById('cust-name').value.trim();
-            const phone = document.getElementById('cust-phone').value.trim();
-            const secPhone = document.getElementById('cust-sec-phone').value.trim();
-            const address = document.getElementById('cust-address').value.trim();
-            const desc = document.getElementById('cust-desc').value.trim();
-
-            if (!name || !phone || !address) {
-                showToast("Please fill in required fields.");
-                return;
-            }
-
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join(', ');
-            const timestamp = new Date().toLocaleString();
-
-            const orderPayload = {
-                Type: "Order",
-                Timestamp: timestamp,
-                Customer_Name: name,
-                Primary_Phone: phone,
-                Items: itemsList,
-                Address: address,
-                Secondary_Phone: secPhone,
-                Description: desc
-            };
-
-            showToast("Submitting order...");
-
-            fetch(BASE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderPayload)
-            }).then(() => {
-                showToast("Order placed successfully!");
-                cart = [];
-                saveCart();
-                updateCartBadge();
-                prepareHomeProducts();
-                switchTab('home');
-            }).catch(err => {
-                console.error("Error submitting order:", err);
-                showToast("Order submitted!");
-                cart = [];
-                saveCart();
-                updateCartBadge();
-                prepareHomeProducts();
-                switchTab('home');
-            });
-        }
-
-        function increaseQuantity(productId) {
-            const product = cachedProducts.find(p => getProductId(p) === productId);
-            if (!product) return;
-            
-            const existing = cart.find(i => getProductId(i) === productId);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            saveCart();
-            updateCartBadge();
-            renderContent();
-            showToast(`Added ${getDisplayName(product)} to cart`);
-        }
-
-        function decreaseQuantity(productId) {
-            const existingIndex = cart.findIndex(i => getProductId(i) === productId);
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity -= 1;
-                if (cart[existingIndex].quantity <= 0) {
-                    cart.splice(existingIndex, 1);
-                }
-            }
-            saveCart();
-            updateCartBadge();
-            renderContent();
-        }
-
-        function updateCartBadge() {
-            const badge = document.getElementById('cart-badge');
-            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            if (totalCount > 0) {
-                badge.innerText = totalCount;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        initApp();
-    </script>
-</body>
-</html>
+            document.getElementById('modal-id').innerText
