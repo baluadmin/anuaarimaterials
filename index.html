@@ -142,17 +142,23 @@
             return encodeURI(clean);
         }
 
-        function getProductId(product, index = 0) {
-            if (!product) return "item_" + index;
+        function getProductId(product) {
+            if (!product) return "";
             const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
             if (String(rawId).trim() !== "") {
                 return String(rawId).trim();
             }
-            return String(getDisplayName(product) + "_" + index).trim();
+            // Fallback unique key using raw base product name
+            const baseName = product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || "Item";
+            return String(baseName).trim();
+        }
+
+        function getRawProductName(product) {
+            return product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || "Item";
         }
 
         function getDisplayName(product) {
-            const englishName = product.product || product.Products || product.PRODUCT || product.productName || product.name || product.Name || product.Item_Name || product.subcategory || product.Subcategory || "Item";
+            const englishName = getRawProductName(product);
             const tamilName = product.Tamil_Name || product.tamil_name || product.Tamil || product.TAMIL || "";
             
             if (tamilName.trim() !== "") {
@@ -423,17 +429,18 @@
                                     <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-700"></i>
                                     <p class="text-xs font-medium">No materials found.</p>
                                 </div>
-                            ` : shuffledHomeProducts.map((p, index) => {
-                                const id = getProductId(p, index);
+                            ` : shuffledHomeProducts.map(p => {
+                                const id = getProductId(p);
                                 const qty = getProductQuantity(id);
                                 const displayName = getDisplayName(p);
+                                const rawNameForModal = getRawProductName(p);
                                 const price = getProductPrice(p);
                                 const subcat = getProductSubcategory(p);
                                 const imgSrc = resolveImageUrl(getProductImage(p));
                                 
                                 return `
                                     <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-500/50 transition">
-                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
+                                        <div onclick="openImageModal('${rawNameForModal.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
                                             ${imgSrc ? `
                                                 <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
                                             ` : `
@@ -550,245 +557,3 @@
                         <div class="space-y-3 pb-2">
                             <div class="grid grid-cols-1 gap-3">
                                 ${subcategoryProducts.length === 0 ? `
-                                    <div class="text-center py-20 text-zinc-600">
-                                        <i class="fa-solid fa-box-open text-4xl mb-2 text-zinc-700"></i>
-                                        <p class="text-xs font-medium">No products found in this subcategory.</p>
-                                    </div>
-                                ` : subcategoryProducts.map((p, index) => {
-                                    const id = getProductId(p, index);
-                                    const qty = getProductQuantity(id);
-                                    const displayName = getDisplayName(p);
-                                    const price = getProductPrice(p);
-                                    const subcat = getProductSubcategory(p);
-                                    const imgSrc = resolveImageUrl(getProductImage(p));
-                                    return `
-                                        <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-500/50 transition">
-                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                                ${imgSrc ? `
-                                                    <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-zinc-950 shadow-inner">
-                                                ` : `
-                                                    <div class="w-full h-44 bg-zinc-950 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner">
-                                                        <i class="fa-solid fa-image text-3xl"></i>
-                                                    </div>
-                                                `}
-                                            </div>
-                                            <div class="flex flex-col items-center justify-center text-center px-1">
-                                                <h4 class="text-xs font-bold text-zinc-200 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                                <div class="flex items-center justify-center space-x-1 text-[10px] text-zinc-500 truncate font-mono mt-0.5 w-full text-center">
-                                                    <span>${id}</span>${subcat ? `<span class="text-zinc-700">•</span><span class="truncate">${subcat}</span>` : ''}
-                                                </div>
-                                            </div>
-                                            <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-zinc-800/80">
-                                                <span class="text-amber-400 font-extrabold text-sm">₹${price.toFixed(2)}</span>
-                                                <div class="flex items-center space-x-1.5 bg-zinc-950 border border-zinc-800 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${id}')" class="bg-zinc-900 text-amber-400 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-zinc-800 transition active:scale-95">
-                                                        <i class="fa-solid fa-minus text-[10px]"></i>
-                                                    </button>
-                                                    <span class="text-xs font-bold text-amber-200 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${id}')" class="bg-amber-500 text-slate-950 w-7 h-7 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
-                                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-            } else if (currentTab === 'cart') {
-                if (cart.length === 0) {
-                    container.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-center text-zinc-500 space-y-3 pt-20 pb-2">
-                            <div class="w-20 h-20 bg-amber-500/15 border border-amber-500/30 rounded-3xl flex items-center justify-center text-amber-400 mb-1 shadow-sm">
-                                <i class="fa-solid fa-cart-shopping text-3xl"></i>
-                            </div>
-                            <p class="text-sm font-bold text-zinc-200">Your cart is empty</p>
-                            <p class="text-xs text-zinc-500 max-w-[200px]">Add items from the home screen to place your order.</p>
-                        </div>
-                    `;
-                } else {
-                    const total = cart.reduce((sum, item) => sum + (getProductPrice(item) * item.quantity), 0).toFixed(2);
-                    container.innerHTML = `
-                        <div class="space-y-3 flex flex-col h-full justify-between pb-2">
-                            <div class="space-y-2.5 overflow-y-auto flex-1 pr-1">
-                                ${cart.map(item => {
-                                    const displayName = getDisplayName(item);
-                                    const price = getProductPrice(item);
-                                    const id = getProductId(item);
-                                    const imgSrc = resolveImageUrl(getProductImage(item));
-                                    return `
-                                    <div class="flex items-center justify-between bg-zinc-900 border border-zinc-800 p-3.5 rounded-3xl shadow-sm">
-                                        <div class="flex items-center space-x-3.5">
-                                            ${imgSrc ? `
-                                                <img src="${imgSrc}" onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-12 h-12 bg-zinc-950 rounded-2xl flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner\'><i class=\'fa-solid fa-image\'></i></div>'" class="w-12 h-12 object-contain rounded-2xl bg-zinc-950 shadow-inner">
-                                            ` : `
-                                                <div class="w-12 h-12 bg-zinc-950 rounded-2xl flex items-center justify-center text-amber-500/40 border border-zinc-800/60 shadow-inner">
-                                                    <i class="fa-solid fa-image"></i>
-                                                </div>
-                                            `}
-                                            <div>
-                                                <h4 class="text-xs font-bold text-zinc-200 leading-snug">${displayName}</h4>
-                                                <span class="text-amber-400 font-semibold text-xs">₹${price.toFixed(2)} × ${item.quantity} = ₹${(price * item.quantity).toFixed(2)}</span>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center space-x-1 bg-zinc-950 border border-zinc-800 rounded-2xl p-1">
-                                            <button onclick="decreaseQuantity('${id}')" class="text-amber-400 hover:text-amber-300 w-6 h-6 rounded-xl flex items-center justify-center transition">
-                                                <i class="fa-solid fa-minus text-[10px]"></i>
-                                            </button>
-                                            <span class="text-xs font-bold px-1.5 text-zinc-200">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${id}')" class="text-amber-400 hover:text-amber-300 w-6 h-6 rounded-xl flex items-center justify-center transition">
-                                                <i class="fa-solid fa-plus text-[10px]"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    `;
-                                }).join('')}
-                            </div>
-                            <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-3xl shadow-sm shrink-0">
-                                <div class="flex justify-between font-bold text-zinc-200 mb-3 text-xs">
-                                    <span>Total Amount:</span>
-                                    <span class="text-amber-400 text-base">₹${total}</span>
-                                </div>
-                                <button onclick="showCheckoutForm()" class="w-full bg-amber-500 text-slate-950 py-3.5 rounded-2xl font-bold shadow-md hover:bg-amber-400 transition active:scale-[0.99] text-xs">
-                                    Proceed to Checkout
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        function showCheckoutForm() {
-            const container = document.getElementById('main-content');
-            container.innerHTML = `
-                <div class="space-y-3 pb-2">
-                    <h2 class="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-2">Customer & Delivery Details</h2>
-                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-3xl shadow-sm space-y-3">
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Full Name *</label>
-                            <input type="text" id="cust-name" autocomplete="off" class="w-full border border-zinc-800 rounded-2xl p-3 text-xs mt-1 bg-zinc-950 focus:bg-zinc-900 focus:outline-amber-500 transition font-medium text-zinc-200">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Primary Phone Number *</label>
-                            <input type="tel" id="cust-phone" autocomplete="off" class="w-full border border-zinc-800 rounded-2xl p-3 text-xs mt-1 bg-zinc-950 focus:bg-zinc-900 focus:outline-amber-500 transition font-medium text-zinc-200">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Secondary Phone (Optional)</label>
-                            <input type="tel" id="cust-sec-phone" autocomplete="off" class="w-full border border-zinc-800 rounded-2xl p-3 text-xs mt-1 bg-zinc-950 focus:bg-zinc-900 focus:outline-amber-500 transition font-medium text-zinc-200">
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Delivery Address *</label>
-                            <textarea id="cust-address" autocomplete="off" class="w-full border border-zinc-800 rounded-2xl p-3 text-xs mt-1 bg-zinc-950 focus:bg-zinc-900 focus:outline-amber-500 transition font-medium text-zinc-200" rows="2"></textarea>
-                        </div>
-                        <div>
-                            <label class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Special Instructions / Notes</label>
-                            <input type="text" id="cust-desc" autocomplete="off" class="w-full border border-zinc-800 rounded-2xl p-3 text-xs mt-1 bg-zinc-950 focus:bg-zinc-900 focus:outline-amber-500 transition font-medium text-zinc-200">
-                        </div>
-                        <div class="pt-2 flex space-x-2">
-                            <button onclick="switchTab('cart')" class="w-1/2 bg-zinc-800 text-zinc-300 py-3.5 rounded-2xl text-xs font-semibold hover:bg-zinc-700 transition">Back</button>
-                            <button onclick="submitOrderToSheet()" class="w-1/2 bg-amber-500 text-slate-950 py-3.5 rounded-2xl text-xs font-bold shadow hover:bg-amber-400 transition">Place Order</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function submitOrderToSheet() {
-            const name = document.getElementById('cust-name').value.trim();
-            const phone = document.getElementById('cust-phone').value.trim();
-            const secPhone = document.getElementById('cust-sec-phone').value.trim();
-            const address = document.getElementById('cust-address').value.trim();
-            const desc = document.getElementById('cust-desc').value.trim();
-
-            if (!name || !phone || !address) {
-                showToast("Please fill in required fields.");
-                return;
-            }
-
-            // Formatted to place each item on a separate line (\n)
-            const itemsList = cart.map(item => `${getDisplayName(item)} (Qty: ${item.quantity}, ₹${getProductPrice(item) * item.quantity})`).join('\n');
-            const timestamp = new Date().toLocaleString();
-
-            const orderPayload = {
-                Type: "Order",
-                Timestamp: timestamp,
-                Customer_Name: name,
-                Primary_Phone: phone,
-                Items: itemsList,
-                Address: address,
-                Secondary_Phone: secPhone,
-                Description: desc
-            };
-
-            showToast("Submitting order...");
-
-            fetch(BASE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderPayload)
-            }).then(() => {
-                showToast("Order placed successfully!");
-                cart = [];
-                saveCart();
-                updateCartBadge();
-                prepareHomeProducts();
-                switchTab('home');
-            }).catch(err => {
-                console.error("Error submitting order:", err);
-                showToast("Order submitted!");
-                cart = [];
-                saveCart();
-                updateCartBadge();
-                prepareHomeProducts();
-                switchTab('home');
-            });
-        }
-
-        function increaseQuantity(productId) {
-            const product = cachedProducts.find((p, index) => getProductId(p, index) === productId);
-            if (!product) return;
-            
-            const existing = cart.find(i => getProductId(i) === productId);
-            if (existing) {
-                existing.quantity += 1;
-            } else {
-                cart.push({ ...product, quantity: 1 });
-            }
-            saveCart();
-            updateCartBadge();
-            renderContent();
-            showToast(`Added ${getDisplayName(product)} to cart`);
-        }
-
-        function decreaseQuantity(productId) {
-            const existingIndex = cart.findIndex(i => getProductId(i) === productId);
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity -= 1;
-                if (cart[existingIndex].quantity <= 0) {
-                    cart.splice(existingIndex, 1);
-                }
-            }
-            saveCart();
-            updateCartBadge();
-            renderContent();
-        }
-
-        function updateCartBadge() {
-            const badge = document.getElementById('cart-badge');
-            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-            if (totalCount > 0) {
-                badge.innerText = totalCount;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
-        }
-
-        initApp();
-    </script>
-</body>
-</html>
