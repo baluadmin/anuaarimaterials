@@ -186,7 +186,8 @@
         }
 
         function getProductImage(product) {
-            return product.image || product.images || product.Images || product.IMAGE || product['images'] || "";
+            if (!product) return "";
+            return product.images || product.Image || product.IMAGE || product.Images || product.image || "";
         }
 
         function initApp() {
