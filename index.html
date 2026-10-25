@@ -28,12 +28,19 @@
                 <button id="header-back-btn" onclick="handleHeaderBack()" class="w-7 h-7 rounded-xl bg-black/10 flex items-center justify-center text-slate-950 hover:bg-black/25 transition hidden shrink-0">
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                 </button>
-                <div class="truncate">
-                    <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase truncate">ANU AARI MATERIALS</h1>
-                    <a id="header-phone" href="tel:9840450113" class="text-[11px] text-amber-950 flex items-center space-x-1 mt-0.5 hover:underline font-bold">
-                        <i class="fa-solid fa-phone text-[10px]"></i>
-                        <span>9840450113</span>
-                    </a>
+                
+                <!-- SHOP LOGO AND DETAILS CONTAINER -->
+                <div class="flex items-center space-x-2 overflow-hidden">
+                    <!-- LOGO IMAGE (Update 'images/logo.png' to your actual logo filename or URL) -->
+                    <img src="images/logo.png" alt="Logo" class="w-8 h-8 rounded-full object-cover bg-white/80 border border-amber-600/30 shadow-inner shrink-0" onerror="this.src='https://placehold.co/100x100/ffffff/d97706?text=ANU';">
+                    
+                    <div class="truncate">
+                        <h1 id="header-title" class="text-xs font-bold tracking-widest uppercase truncate">ANU AARI MATERIALS</h1>
+                        <a id="header-phone" href="tel:9840450113" class="text-[11px] text-amber-950 flex items-center space-x-1 mt-0.5 hover:underline font-bold">
+                            <i class="fa-solid fa-phone text-[10px]"></i>
+                            <span>9840450113</span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="text-[11px] bg-black/10 px-3 py-1.5 rounded-xl text-slate-950 font-bold backdrop-blur-sm shrink-0 ml-2">
