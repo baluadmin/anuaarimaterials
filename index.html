@@ -28,9 +28,9 @@
 
         <!-- TOP BANNER AREA -->
         <header id="app-header" class="bg-amber-500 text-slate-950 p-2 pb-0 flex flex-col shadow-md z-30 shrink-0">
-            <!-- FULL WIDTH HD BANNER CONTAINER (Changed object-cover to object-contain) -->
+            <!-- FULL WIDTH HD BANNER CONTAINER -->
             <div class="w-full relative rounded-xl overflow-hidden shadow-sm bg-white border border-amber-600/30 h-36 flex items-center justify-center">
-                <img src="images/banner1.png" alt="Store Banner" class="w-full h-full object-contain bg-white hd-banner" onerror="this.src='https://placehold.co/800x300/ffffff/d97706?text=ANU+AARI+MATERIALS';">
+                <img src="images/banner1.png" alt="Store Banner" class="w-full h-full object-cover hd-banner" onerror="this.src='https://placehold.co/800x300/ffffff/d97706?text=ANU+AARI+MATERIALS';">
             </div>
             <!-- Hidden elements for script state -->
             <button id="header-back-btn" onclick="handleHeaderBack()" class="hidden"></button>
@@ -80,7 +80,7 @@
             Notification message
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR -->
+        <!-- BOTTOM NAVIGATION BAR (MADE COMPACT & SLIMMER) -->
         <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-slate-200 flex justify-around items-center h-12 shadow-lg z-30 shrink-0">
             <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-amber-600 transition py-1">
                 <i class="fa-solid fa-house text-sm"></i>
