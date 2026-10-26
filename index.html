@@ -130,7 +130,7 @@
         
         let cachedProducts = [];
         let cachedCategories = [];
-        let shuffledHomeProducts = [];
+        let groupedHomeProducts = {};
 
         function resolveImageUrl(imageName) {
             if (!imageName || String(imageName).trim() === '') {
@@ -183,7 +183,7 @@
         }
 
         function getProductCategory(product) {
-            return product.category || product.Category || product.CATEGORY || product['Category'] || "";
+            return product.category || product.Category || product.CATEGORY || product['Category'] || "General";
         }
 
         function getProductImage(product) {
@@ -256,15 +256,6 @@
             localStorage.setItem('anu_aari_cart_guest', JSON.stringify(cart));
         }
 
-        function shuffleArray(array) {
-            let arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
         function prepareHomeProducts() {
             let filtered = cachedProducts;
             
@@ -285,7 +276,15 @@
                 });
             }
 
-            shuffledHomeProducts = shuffleArray(filtered);
+            // Group products by category
+            groupedHomeProducts = {};
+            filtered.forEach(p => {
+                const cat = getProductCategory(p);
+                if (!groupedHomeProducts[cat]) {
+                    groupedHomeProducts[cat] = [];
+                }
+                groupedHomeProducts[cat].push(p);
+            });
         }
 
         function handleSearch(query) {
@@ -422,8 +421,10 @@
             const container = document.getElementById('main-content');
 
             if (currentTab === 'home') {
+                const categories = Object.keys(groupedHomeProducts);
+
                 container.innerHTML = `
-                    <div class="space-y-3 pb-2 max-w-5xl mx-auto">
+                    <div class="space-y-6 pb-4 max-w-5xl mx-auto">
                         ${selectedSubcategoryFilter !== 'All' ? `
                             <div class="flex justify-between items-center bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-2xl shadow-sm mb-2">
                                 <span class="text-xs sm:text-sm font-semibold text-amber-800 truncate">Filter: ${selectedSubcategoryFilter}</span>
@@ -433,54 +434,69 @@
                             </div>
                         ` : ''}
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            ${shuffledHomeProducts.length === 0 ? `
-                                <div class="col-span-full text-center py-20 text-slate-400">
-                                    <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-300"></i>
-                                    <p class="text-xs sm:text-sm font-medium">No materials found.</p>
-                                </div>
-                            ` : shuffledHomeProducts.map((p, index) => {
-                                const id = getProductId(p, index);
-                                const qty = getProductQuantity(id);
-                                const displayName = getDisplayName(p);
-                                const price = getProductPrice(p);
-                                const subcat = getProductSubcategory(p);
-                                const imgSrc = resolveImageUrl(getProductImage(p));
-                                
-                                return `
-                                    <div class="bg-white border border-slate-200 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-400 transition">
-                                        <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
-                                            ${imgSrc ? `
-                                                <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-slate-50 shadow-inner">
-                                            ` : `
-                                                <div class="w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner">
-                                                    <i class="fa-solid fa-image text-3xl"></i>
-                                                </div>
-                                            `}
-                                        </div>
-                                        <div class="flex flex-col items-center justify-center text-center px-1">
-                                            <h4 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
-                                            <div class="flex items-center justify-center space-x-1 text-[10px] sm:text-xs text-slate-400 truncate font-mono mt-0.5 w-full text-center">
-                                                <span>${id}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
-                                            </div>
-                                        </div>
-                                        <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-100">
-                                            <span class="text-amber-600 font-extrabold text-sm sm:text-base">₹${price.toFixed(2)}</span>
-                                            
-                                            <div class="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
-                                                <button onclick="decreaseQuantity('${id}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
-                                                    <i class="fa-solid fa-minus text-[10px]"></i>
-                                                </button>
-                                                <span class="text-xs sm:text-sm font-bold text-slate-700 px-2">${qty}</span>
-                                                <button onclick="increaseQuantity('${id}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
-                                                    <i class="fa-solid fa-plus text-[10px]"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                        ${categories.length === 0 ? `
+                            <div class="text-center py-20 text-slate-400">
+                                <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-300"></i>
+                                <p class="text-xs sm:text-sm font-medium">No materials found.</p>
+                            </div>
+                        ` : categories.map(catName => {
+                            const productsInCat = groupedHomeProducts[catName];
+                            return `
+                                <div class="space-y-3">
+                                    <!-- Category Section Header -->
+                                    <div class="flex items-center space-x-2 border-b border-amber-500/30 pb-2">
+                                        <i class="fa-solid fa-folder-open text-amber-600 text-sm"></i>
+                                        <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider">${catName}</h3>
+                                        <span class="text-[10px] bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded-full font-bold">${productsInCat.length}</span>
                                     </div>
-                                `;
-                            }).join('')}
-                        </div>
+
+                                    <!-- Products Grid for this Category -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        ${productsInCat.map((p, index) => {
+                                            const id = getProductId(p, index);
+                                            const qty = getProductQuantity(id);
+                                            const displayName = getDisplayName(p);
+                                            const price = getProductPrice(p);
+                                            const subcat = getProductSubcategory(p);
+                                            const imgSrc = resolveImageUrl(getProductImage(p));
+                                            
+                                            return `
+                                                <div class="bg-white border border-slate-200 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-400 transition">
+                                                    <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
+                                                        ${imgSrc ? `
+                                                            <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-slate-50 shadow-inner">
+                                                        ` : `
+                                                            <div class="w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner">
+                                                                <i class="fa-solid fa-image text-3xl"></i>
+                                                            </div>
+                                                        `}
+                                                    </div>
+                                                    <div class="flex flex-col items-center justify-center text-center px-1">
+                                                        <h4 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
+                                                        <div class="flex items-center justify-center space-x-1 text-[10px] sm:text-xs text-slate-400 truncate font-mono mt-0.5 w-full text-center">
+                                                            <span>${id}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-100">
+                                                        <span class="text-amber-600 font-extrabold text-sm sm:text-base">₹${price.toFixed(2)}</span>
+                                                        
+                                                        <div class="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
+                                                            <button onclick="decreaseQuantity('${id}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
+                                                                <i class="fa-solid fa-minus text-[10px]"></i>
+                                                            </button>
+                                                            <span class="text-xs sm:text-sm font-bold text-slate-700 px-2">${qty}</span>
+                                                            <button onclick="increaseQuantity('${id}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
+                                                                <i class="fa-solid fa-plus text-[10px]"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                 `;
             } else if (currentTab === 'categories') {
@@ -508,8 +524,7 @@
                                     const catProducts = cachedProducts.filter(p => getProductCategory(p) === catName || getProductSubcategory(p) === catName);
                                     let catImage = cat.image || '';
                                     if (!catImage && catProducts.length > 0) {
-                                        const shuffledCatProducts = shuffleArray(catProducts);
-                                        catImage = getProductImage(shuffledCatProducts[0]);
+                                        catImage = getProductImage(catProducts[0]);
                                     }
                                     const catImgSrc = resolveImageUrl(catImage);
 
@@ -539,8 +554,7 @@
                                     const subProducts = cachedProducts.filter(p => getProductSubcategory(p) === sub);
                                     let subImage = '';
                                     if (subProducts.length > 0) {
-                                        const shuffledSubProducts = shuffleArray(subProducts);
-                                        subImage = getProductImage(shuffledSubProducts[0]);
+                                        subImage = getProductImage(subProducts[0]);
                                     }
                                     const subImgSrc = resolveImageUrl(subImage);
 
