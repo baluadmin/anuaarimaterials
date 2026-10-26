@@ -22,17 +22,29 @@
     <!-- Responsive Container: Full screen on mobile, adaptable full screen layout on desktop -->
     <div class="w-full h-[100dvh] sm:w-screen sm:h-screen sm:rounded-none sm:shadow-none bg-white flex flex-col justify-between relative overflow-hidden border-0 sm:border-none text-slate-800">
 
-        <!-- SEARCH BAR -->
-        <div id="search-container" class="bg-amber-500 px-3 py-3 z-30 shrink-0 shadow-md">
-            <div class="relative max-w-3xl mx-auto">
+        <!-- TOP BAR (Title, Search, Phone) -->
+        <div id="search-container" class="bg-amber-500 px-3 py-3 z-30 shrink-0 shadow-md flex items-center justify-between gap-3">
+            <!-- Left: Store Title -->
+            <div class="font-extrabold text-slate-950 text-xs sm:text-sm tracking-wide whitespace-nowrap">
+                ANU AARI MATERIALS
+            </div>
+
+            <!-- Middle: Search Bar -->
+            <div class="relative flex-1 max-w-xl mx-auto">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
                     <i class="fa-solid fa-search text-xs"></i>
                 </span>
-                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="w-full pl-10 pr-10 py-2.5 bg-white/95 border border-amber-600/30 rounded-2xl text-xs sm:text-sm focus:outline-none shadow-sm text-slate-800 placeholder-zinc-400 font-medium">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search aari materials, beads, threads..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="w-full pl-10 pr-10 py-2 bg-white/95 border border-amber-600/30 rounded-2xl text-xs sm:text-sm focus:outline-none shadow-sm text-slate-800 placeholder-zinc-400 font-medium">
                 <button id="search-clear-btn" onclick="clearSearch()" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-zinc-400 hover:text-zinc-600 hidden">
                     <i class="fa-solid fa-xmark text-xs"></i>
                 </button>
             </div>
+
+            <!-- Right: Contact Phone Number -->
+            <a href="tel:+919840450113" class="font-bold text-slate-950 text-xs sm:text-sm whitespace-nowrap hover:underline flex items-center gap-1.5">
+                <i class="fa-solid fa-phone text-[11px]"></i>
+                <span>+91 9840450113</span>
+            </a>
         </div>
 
         <!-- STABLE SUB-HEADER BAR -->
