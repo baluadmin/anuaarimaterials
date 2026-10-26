@@ -147,15 +147,22 @@
             return encodeURI(clean);
         }
 
-        function getProductId(product, index = 0) {
+        // Unique internal key for cart logic
+        function getCartUniqueKey(product, index = 0) {
             if (!product) return "item_" + index;
             const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
             const name = getDisplayName(product);
-            
             if (String(rawId).trim() !== "") {
                 return String(rawId).trim() + "_" + index;
             }
             return String(name + "_" + index).trim().replace(/\s+/g, '_');
+        }
+
+        // Clean original ID for display purposes
+        function getDisplayId(product) {
+            if (!product) return "";
+            const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
+            return String(rawId).trim();
         }
 
         function getDisplayName(product) {
@@ -272,13 +279,12 @@
                 const q = searchQuery.toLowerCase();
                 filtered = filtered.filter(p => {
                     const name = getDisplayName(p).toLowerCase();
-                    const id = String(getProductId(p)).toLowerCase();
+                    const id = String(getDisplayId(p)).toLowerCase();
                     const subcat = String(getProductSubcategory(p)).toLowerCase();
                     return name.includes(q) || id.includes(q) || subcat.includes(q);
                 });
             }
 
-            // Group products strictly by subcategory sequentially
             groupedHomeSubcategories = {};
             filtered.forEach(p => {
                 const subcat = getProductSubcategory(p);
@@ -390,8 +396,8 @@
             switchTab('home');
         }
 
-        function getProductQuantity(productId) {
-            const item = cart.find(i => getProductId(i) === productId);
+        function getProductQuantity(uniqueKey) {
+            const item = cart.find(i => i.uniqueKey === uniqueKey);
             return item ? item.quantity : 0;
         }
 
@@ -452,11 +458,12 @@
                                         <span class="text-[10px] bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded-full font-bold">${productsInSubcat.length} items</span>
                                     </div>
 
-                                    <!-- Products Grid for this Subcategory (displayed completely before the next subcategory starts) -->
+                                    <!-- Products Grid for this Subcategory -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                                         ${productsInSubcat.map((p, index) => {
-                                            const id = getProductId(p, index);
-                                            const qty = getProductQuantity(id);
+                                            const uniqueKey = getCartUniqueKey(p, index);
+                                            const displayId = getDisplayId(p);
+                                            const qty = getProductQuantity(uniqueKey);
                                             const displayName = getDisplayName(p);
                                             const price = getProductPrice(p);
                                             const subcat = getProductSubcategory(p);
@@ -464,7 +471,7 @@
                                             
                                             return `
                                                 <div class="bg-white border border-slate-200 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-400 transition">
-                                                    <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
+                                                    <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${displayId}', ${price}, '${imgSrc}')" class="cursor-pointer">
                                                         ${imgSrc ? `
                                                             <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-slate-50 shadow-inner">
                                                         ` : `
@@ -476,18 +483,18 @@
                                                     <div class="flex flex-col items-center justify-center text-center px-1">
                                                         <h4 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
                                                         <div class="flex items-center justify-center space-x-1 text-[10px] sm:text-xs text-slate-400 truncate font-mono mt-0.5 w-full text-center">
-                                                            <span>${id}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
+                                                            <span>${displayId}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
                                                         </div>
                                                     </div>
                                                     <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-100">
                                                         <span class="text-amber-600 font-extrabold text-sm sm:text-base">₹${price.toFixed(2)}</span>
                                                         
                                                         <div class="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
-                                                            <button onclick="decreaseQuantity('${id}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
+                                                            <button onclick="decreaseQuantity('${uniqueKey}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
                                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                                             </button>
                                                             <span class="text-xs sm:text-sm font-bold text-slate-700 px-2">${qty}</span>
-                                                            <button onclick="increaseQuantity('${id}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
+                                                            <button onclick="increaseQuantity('${uniqueKey}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
                                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                                             </button>
                                                         </div>
@@ -587,15 +594,15 @@
                                         <p class="text-xs sm:text-sm font-medium">No products found in this subcategory.</p>
                                     </div>
                                 ` : subcategoryProducts.map((p, index) => {
-                                    const id = getProductId(p, index);
-                                    const qty = getProductQuantity(id);
+                                    const displayId = getDisplayId(p);
+                                    const qty = getProductQuantity(getCartUniqueKey(p, index));
                                     const displayName = getDisplayName(p);
                                     const price = getProductPrice(p);
                                     const subcat = getProductSubcategory(p);
                                     const imgSrc = resolveImageUrl(getProductImage(p));
                                     return `
                                         <div class="bg-white border border-slate-200 rounded-3xl p-3.5 flex flex-col justify-between shadow-sm hover:border-amber-400 transition">
-                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${id}', ${price}, '${imgSrc}')" class="cursor-pointer">
+                                            <div onclick="openImageModal('${displayName.replace(/'/g, "\\'")}', '${displayId}', ${price}, '${imgSrc}')" class="cursor-pointer">
                                                 ${imgSrc ? `
                                                     <img src="${imgSrc}" onerror="this.parentElement.innerHTML='<div class=\'w-full h-44 bg-slate-50 rounded-2xl mb-2.5 flex items-center justify-center text-amber-500/40 border border-slate-100 shadow-inner\'><i class=\'fa-solid fa-image text-3xl\'></i></div>'" class="w-full h-44 object-contain rounded-2xl mb-2.5 bg-slate-50 shadow-inner">
                                                 ` : `
@@ -607,17 +614,17 @@
                                             <div class="flex flex-col items-center justify-center text-center px-1">
                                                 <h4 class="text-xs sm:text-sm font-bold text-slate-800 leading-snug line-clamp-2 break-words text-center" title="${displayName}">${displayName}</h4>
                                                 <div class="flex items-center justify-center space-x-1 text-[10px] sm:text-xs text-slate-400 truncate font-mono mt-0.5 w-full text-center">
-                                                    <span>${id}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
+                                                    <span>${displayId}</span>${subcat ? `<span class="text-slate-300">•</span><span class="truncate">${subcat}</span>` : ''}
                                                 </div>
                                             </div>
                                             <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-100">
                                                 <span class="text-amber-600 font-extrabold text-sm sm:text-base">₹${price.toFixed(2)}</span>
                                                 <div class="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${id}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
+                                                    <button onclick="decreaseQuantity('${getCartUniqueKey(p, index)}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
                                                         <i class="fa-solid fa-minus text-[10px]"></i>
                                                     </button>
                                                     <span class="text-xs sm:text-sm font-bold text-slate-700 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${id}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
+                                                    <button onclick="increaseQuantity('${getCartUniqueKey(p, index)}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
                                                         <i class="fa-solid fa-plus text-[10px]"></i>
                                                     </button>
                                                 </div>
@@ -648,7 +655,7 @@
                                 ${cart.map(item => {
                                     const displayName = getDisplayName(item);
                                     const price = getProductPrice(item);
-                                    const id = getProductId(item);
+                                    const uniqueKey = item.uniqueKey;
                                     const imgSrc = resolveImageUrl(getProductImage(item));
                                     return `
                                     <div class="flex items-center justify-between bg-white border border-slate-200 p-3.5 rounded-3xl shadow-sm">
@@ -666,11 +673,11 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-1 bg-slate-50 border border-slate-200 rounded-2xl p-1">
-                                            <button onclick="decreaseQuantity('${id}')" class="text-amber-600 hover:text-amber-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="decreaseQuantity('${uniqueKey}')" class="text-amber-600 hover:text-amber-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-minus text-[10px]"></i>
                                             </button>
                                             <span class="text-xs sm:text-sm font-bold px-1.5 text-slate-700">${item.quantity}</span>
-                                            <button onclick="increaseQuantity('${id}')" class="text-amber-600 hover:text-amber-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
+                                            <button onclick="increaseQuantity('${uniqueKey}')" class="text-amber-600 hover:text-amber-700 w-6 h-6 rounded-xl flex items-center justify-center transition">
                                                 <i class="fa-solid fa-plus text-[10px]"></i>
                                             </button>
                                         </div>
@@ -779,24 +786,29 @@
             });
         }
 
-        function increaseQuantity(productId) {
-            const product = cachedProducts.find((p, index) => getProductId(p, index) === productId);
-            if (!product) return;
+        function increaseQuantity(uniqueKey) {
+            let foundProduct = null;
+            cachedProducts.forEach((p, idx) => {
+                if (getCartUniqueKey(p, idx) === uniqueKey) {
+                    foundProduct = p;
+                }
+            });
+            if (!foundProduct) return;
             
-            const existing = cart.find(i => getProductId(i) === productId);
+            const existing = cart.find(i => i.uniqueKey === uniqueKey);
             if (existing) {
                 existing.quantity += 1;
             } else {
-                cart.push({ ...product, quantity: 1 });
+                cart.push({ ...foundProduct, uniqueKey: uniqueKey, quantity: 1 });
             }
             saveCart();
             updateCartBadge();
             renderContent();
-            showToast(`Added ${getDisplayName(product)} to cart`);
+            showToast(`Added ${getDisplayName(foundProduct)} to cart`);
         }
 
-        function decreaseQuantity(productId) {
-            const existingIndex = cart.findIndex(i => getProductId(i) === productId);
+        function decreaseQuantity(uniqueKey) {
+            const existingIndex = cart.findIndex(i => i.uniqueKey === uniqueKey);
             if (existingIndex > -1) {
                 cart[existingIndex].quantity -= 1;
                 if (cart[existingIndex].quantity <= 0) {
