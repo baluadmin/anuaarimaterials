@@ -147,15 +147,14 @@
             return encodeURI(clean);
         }
 
-        // Unique internal key for cart logic
-        function getCartUniqueKey(product, index = 0) {
-            if (!product) return "item_" + index;
+        // Unique internal key for cart logic using global index to prevent collisions
+        function getCartUniqueKey(product, globalIndex = 0) {
+            if (!product) return "item_" + globalIndex;
             const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
-            const name = getDisplayName(product);
             if (String(rawId).trim() !== "") {
-                return String(rawId).trim() + "_" + index;
+                return String(rawId).trim() + "_" + globalIndex;
             }
-            return String(name + "_" + index).trim().replace(/\s+/g, '_');
+            return "item_" + globalIndex;
         }
 
         // Clean original ID for display purposes
@@ -460,8 +459,9 @@
 
                                     <!-- Products Grid for this Subcategory -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                        ${productsInSubcat.map((p, index) => {
-                                            const uniqueKey = getCartUniqueKey(p, index);
+                                        ${productsInSubcat.map((p) => {
+                                            const globalIndex = cachedProducts.indexOf(p);
+                                            const uniqueKey = getCartUniqueKey(p, globalIndex);
                                             const displayId = getDisplayId(p);
                                             const qty = getProductQuantity(uniqueKey);
                                             const displayName = getDisplayName(p);
@@ -593,9 +593,11 @@
                                         <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-300"></i>
                                         <p class="text-xs sm:text-sm font-medium">No products found in this subcategory.</p>
                                     </div>
-                                ` : subcategoryProducts.map((p, index) => {
+                                ` : subcategoryProducts.map((p) => {
+                                    const globalIndex = cachedProducts.indexOf(p);
+                                    const uniqueKey = getCartUniqueKey(p, globalIndex);
                                     const displayId = getDisplayId(p);
-                                    const qty = getProductQuantity(getCartUniqueKey(p, index));
+                                    const qty = getProductQuantity(uniqueKey);
                                     const displayName = getDisplayName(p);
                                     const price = getProductPrice(p);
                                     const subcat = getProductSubcategory(p);
@@ -620,11 +622,11 @@
                                             <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-100">
                                                 <span class="text-amber-600 font-extrabold text-sm sm:text-base">₹${price.toFixed(2)}</span>
                                                 <div class="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
-                                                    <button onclick="decreaseQuantity('${getCartUniqueKey(p, index)}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
+                                                    <button onclick="decreaseQuantity('${uniqueKey}')" class="bg-white text-amber-600 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-slate-100 transition active:scale-95">
                                                         <i class="fa-solid fa-minus text-[10px]"></i>
                                                     </button>
                                                     <span class="text-xs sm:text-sm font-bold text-slate-700 px-2">${qty}</span>
-                                                    <button onclick="increaseQuantity('${getCartUniqueKey(p, index)}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
+                                                    <button onclick="increaseQuantity('${uniqueKey}')" class="bg-amber-500 text-slate-950 w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center shadow-sm hover:bg-amber-400 transition active:scale-95">
                                                         <i class="fa-solid fa-plus text-[10px]"></i>
                                                     </button>
                                                 </div>
