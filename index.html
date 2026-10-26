@@ -150,10 +150,12 @@
         function getProductId(product, index = 0) {
             if (!product) return "item_" + index;
             const rawId = product.id || product.Item_ID || product.item_id || product.ID || product['Item_ID'] || product.sku || product.SKU || "";
+            const name = getDisplayName(product);
+            
             if (String(rawId).trim() !== "") {
-                return String(rawId).trim();
+                return String(rawId).trim() + "_" + index;
             }
-            return String(getDisplayName(product) + "_" + index).trim();
+            return String(name + "_" + index).trim().replace(/\s+/g, '_');
         }
 
         function getDisplayName(product) {
