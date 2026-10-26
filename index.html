@@ -130,7 +130,7 @@
         
         let cachedProducts = [];
         let cachedCategories = [];
-        let groupedHomeProducts = {};
+        let groupedHomeSubcategories = {};
 
         function resolveImageUrl(imageName) {
             if (!imageName || String(imageName).trim() === '') {
@@ -181,7 +181,7 @@
         }
 
         function getProductSubcategory(product) {
-            return product.subcategory || product.Subcategory || product.SUBCATEGORY || product['Subcategory'] || "";
+            return product.subcategory || product.Subcategory || product.SUBCATEGORY || product['Subcategory'] || "General";
         }
 
         function getProductCategory(product) {
@@ -278,14 +278,14 @@
                 });
             }
 
-            // Group products strictly by category sequentially
-            groupedHomeProducts = {};
+            // Group products strictly by subcategory sequentially
+            groupedHomeSubcategories = {};
             filtered.forEach(p => {
-                const cat = getProductCategory(p);
-                if (!groupedHomeProducts[cat]) {
-                    groupedHomeProducts[cat] = [];
+                const subcat = getProductSubcategory(p);
+                if (!groupedHomeSubcategories[subcat]) {
+                    groupedHomeSubcategories[subcat] = [];
                 }
-                groupedHomeProducts[cat].push(p);
+                groupedHomeSubcategories[subcat].push(p);
             });
         }
 
@@ -423,7 +423,7 @@
             const container = document.getElementById('main-content');
 
             if (currentTab === 'home') {
-                const categories = Object.keys(groupedHomeProducts);
+                const subcategories = Object.keys(groupedHomeSubcategories);
 
                 container.innerHTML = `
                     <div class="space-y-6 pb-6 max-w-5xl mx-auto">
@@ -436,25 +436,25 @@
                             </div>
                         ` : ''}
 
-                        ${categories.length === 0 ? `
+                        ${subcategories.length === 0 ? `
                             <div class="text-center py-20 text-slate-400">
                                 <i class="fa-solid fa-box-open text-4xl mb-2 text-slate-300"></i>
                                 <p class="text-xs sm:text-sm font-medium">No materials found.</p>
                             </div>
-                        ` : categories.map(catName => {
-                            const productsInCat = groupedHomeProducts[catName];
+                        ` : subcategories.map(subcatName => {
+                            const productsInSubcat = groupedHomeSubcategories[subcatName];
                             return `
                                 <div class="space-y-3 bg-white/60 p-4 rounded-3xl border border-slate-200 shadow-sm">
-                                    <!-- Category Section Header -->
+                                    <!-- Subcategory Section Header -->
                                     <div class="flex items-center space-x-2 border-b border-amber-500/30 pb-2">
-                                        <i class="fa-solid fa-folder-open text-amber-600 text-sm"></i>
-                                        <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider">${catName}</h3>
-                                        <span class="text-[10px] bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded-full font-bold">${productsInCat.length} items</span>
+                                        <i class="fa-solid fa-tag text-amber-600 text-sm"></i>
+                                        <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 uppercase tracking-wider">${subcatName}</h3>
+                                        <span class="text-[10px] bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded-full font-bold">${productsInSubcat.length} items</span>
                                     </div>
 
-                                    <!-- Products Grid for this Category (displayed completely before the next category starts) -->
+                                    <!-- Products Grid for this Subcategory (displayed completely before the next subcategory starts) -->
                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                        ${productsInCat.map((p, index) => {
+                                        ${productsInSubcat.map((p, index) => {
                                             const id = getProductId(p, index);
                                             const qty = getProductQuantity(id);
                                             const displayName = getDisplayName(p);
