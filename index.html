@@ -80,24 +80,24 @@
         </main>
 
         <!-- FLOATING TOAST NOTIFICATION -->
-        <div id="toast" class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-slate-900 text-amber-400 text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-xl transition-all duration-300 opacity-0 pointer-events-none z-50 font-medium border border-amber-500/30">
+        <div id="toast" class="absolute bottom-16 left-1/2 transform -translate-x-1/2 bg-slate-900 text-amber-400 text-xs sm:text-sm px-4 py-2 rounded-2xl shadow-xl transition-all duration-300 opacity-0 pointer-events-none z-50 font-medium border border-amber-500/30">
             Notification message
         </div>
 
-        <!-- BOTTOM NAVIGATION BAR -->
-        <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-rose-100 flex justify-around items-center h-16 shadow-lg z-30 shrink-0">
-            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-amber-600 transition">
-                <i class="fa-solid fa-house text-lg"></i>
-                <span class="text-[10px] sm:text-xs mt-1 font-semibold">Home</span>
+        <!-- COMPACT BOTTOM NAVIGATION BAR -->
+        <nav id="bottom-nav" class="bg-white/95 backdrop-blur-md border-t border-rose-100 flex justify-around items-center h-12 shadow-md z-30 shrink-0">
+            <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center justify-center py-1 text-amber-600 transition">
+                <i class="fa-solid fa-house text-sm"></i>
+                <span class="text-[9px] sm:text-[10px] leading-tight font-semibold">Home</span>
             </button>
-            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center text-slate-400 hover:text-amber-600 transition">
-                <i class="fa-solid fa-layer-group text-lg"></i>
-                <span class="text-[10px] sm:text-xs mt-1 font-semibold">Categories</span>
+            <button onclick="switchTab('categories')" id="nav-categories" class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-amber-600 transition">
+                <i class="fa-solid fa-layer-group text-sm"></i>
+                <span class="text-[9px] sm:text-[10px] leading-tight font-semibold">Categories</span>
             </button>
-            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center text-slate-400 hover:text-amber-600 transition relative">
-                <i class="fa-solid fa-cart-shopping text-lg"></i>
-                <span class="text-[10px] sm:text-xs mt-1 font-semibold">Cart</span>
-                <span id="cart-badge" class="absolute -top-1 right-2 bg-amber-500 text-slate-950 text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden shadow-sm">0</span>
+            <button onclick="switchTab('cart')" id="nav-cart" class="flex flex-col items-center justify-center py-1 text-slate-400 hover:text-amber-600 transition relative">
+                <i class="fa-solid fa-cart-shopping text-sm"></i>
+                <span class="text-[9px] sm:text-[10px] leading-tight font-semibold">Cart</span>
+                <span id="cart-badge" class="absolute -top-0.5 right-3 bg-amber-500 text-slate-950 text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold hidden shadow-sm">0</span>
             </button>
         </nav>
 
@@ -359,9 +359,9 @@
             ['home', 'categories', 'cart'].forEach(t => {
                 const btn = document.getElementById(`nav-${t}`);
                 if (t === tab) {
-                    btn.className = "flex flex-col items-center text-amber-600 transition";
+                    btn.className = "flex flex-col items-center justify-center py-1 text-amber-600 transition";
                 } else {
-                    btn.className = "flex flex-col items-center text-slate-400 hover:text-amber-600 transition";
+                    btn.className = "flex flex-col items-center justify-center py-1 text-slate-400 hover:text-amber-600 transition";
                 }
             });
 
